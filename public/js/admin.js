@@ -3,6 +3,36 @@ function stopEnter(e) {
 }
 
 const card = document.querySelectorAll('.card');
+// ---------------------------------------------------------------------------
+// 1. BUILD CARDS FROM fakeEvents
+// ---------------------------------------------------------------------------
+const page = document.querySelector('.page');
+
+for (let event of fakeEvents) {
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  card.innerHTML = `
+    <h2>${event.title}</h2>
+    <div class="card-content">
+      <div class="description"><p>Description</p><p>${event.description}</p></div>
+      <div class="category"><p>Category</p><p>${event.category}</p></div>
+      <div class="event_date"><p>Date</p><p>${event.event_date}</p></div>
+      <div class="start_time"><p>Start Time</p><p>${event.start_time}</p></div>
+      <div class="end_time"><p>End Time</p><p>${event.end_time}</p></div>
+      <div class="location"><p>Location</p><p>${event.location}</p></div>
+      <div class="capacity"><p>Capacity</p><p>${event.capacity}</p></div>
+      <div class="organizer_id"><p>Organizer</p><p>${event.organizer_id}</p></div>
+      <div class="status"><p>Status</p><p>${event.status}</p></div>
+    </div>
+    <div class="modifiers">
+      <button class="edit">Edit</button>
+      <button class="delete">Delete</button>
+    </div>
+  `;
+
+  page.append(card);
+}
 
 // Declare button modifiers
 const deleteButton = document.querySelectorAll('.delete');
@@ -15,44 +45,38 @@ for (let i of deleteButton) {
 // Edit Card Logic
 const editButton = document.querySelectorAll('.edit');
 
+// list of every class name that holds an editable value, matching the schema fields
+const editableFields = [
+  'description',
+  'category',
+  'event_date',
+  'start_time',
+  'end_time',
+  'location',
+  'capacity',
+  'organizer_id',
+  'status',
+];
+
 for (let i of editButton) {
   i.addEventListener('click', () => {
     const thisCard = i.closest('.card'); // parent
-    const categoryValue = thisCard.querySelector('.category p:last-child');
-    const dateValue = thisCard.querySelector('.date p:last-child');
-    const capacityValue = thisCard.querySelector('.capacity p:last-child');
-    const statusValue = thisCard.querySelector('.status p:last-child');
 
     if (i.textContent === 'Edit') {
-      categoryValue.contentEditable = true;
-      categoryValue.classList.add('selected');
-      categoryValue.addEventListener('keydown', stopEnter);
-
-      dateValue.contentEditable = true;
-      dateValue.classList.add('selected');
-      dateValue.addEventListener('keydown', stopEnter);
-
-      capacityValue.contentEditable = true;
-      capacityValue.classList.add('selected');
-      capacityValue.addEventListener('keydown', stopEnter);
-
-      statusValue.contentEditable = true;
-      statusValue.classList.add('selected');
-      statusValue.addEventListener('keydown', stopEnter);
+      for (let fieldClass of editableFields) {
+        const value = thisCard.querySelector(`.${fieldClass} p:last-child`);
+        value.contentEditable = true;
+        value.classList.add('selected');
+        value.addEventListener('keydown', stopEnter);
+      }
 
       i.textContent = 'Save';
     } else if (i.textContent === 'Save') {
-      categoryValue.contentEditable = false;
-      categoryValue.classList.remove('selected');
-
-      dateValue.contentEditable = false;
-      dateValue.classList.remove('selected');
-
-      capacityValue.contentEditable = false;
-      capacityValue.classList.remove('selected');
-
-      statusValue.contentEditable = false;
-      statusValue.classList.remove('selected');
+      for (let fieldClass of editableFields) {
+        const value = thisCard.querySelector(`.${fieldClass} p:last-child`);
+        value.contentEditable = false;
+        value.classList.remove('selected');
+      }
 
       i.textContent = 'Edit';
     }

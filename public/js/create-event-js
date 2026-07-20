@@ -31,8 +31,9 @@ forms.addEventListener('submit', (e) => {
   const currentIndex = fakeEvents.length - 1;
   const newEventData = fakeEvents[currentIndex];
 
+  const createdHeader = document.createElement('p');
   const card = document.createElement('div');
-  card.classList.add('card');
+  card.classList.add('cardDisplay');
 
   card.innerHTML = `
     <h2>${newEventData.title}</h2>
@@ -48,6 +49,10 @@ forms.addEventListener('submit', (e) => {
       <div class="status"><p>Status</p><p>${newEventData.status}</p></div>
     </div>
   `;
+  //Created Title
+  createdHeader.classList.add('createdHeader');
+  createdHeader.textContent = 'Created Event';
+  page.append(createdHeader);
 
   page.append(card);
 });

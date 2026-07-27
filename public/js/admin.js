@@ -64,17 +64,20 @@ for (let i of editButton) {
     if (i.textContent === 'Edit') {
       for (let fieldClass of editableFields) {
         const value = thisCard.querySelector(`.${fieldClass} p:last-child`);
-        value.contentEditable = true;
+        value.contentEditable = 'true';
         value.classList.add('selected');
-        value.addEventListener('keydown', stopEnter);
+        value.onkeydown = stopEnter;
       }
 
       i.textContent = 'Save';
     } else if (i.textContent === 'Save') {
       for (let fieldClass of editableFields) {
         const value = thisCard.querySelector(`.${fieldClass} p:last-child`);
+        value.textContent = value.textContent; // strip any pasted HTML/markup
+
         value.contentEditable = false;
         value.classList.remove('selected');
+        value.onkeydown = null; // remove the handler when no longer editable
       }
 
       i.textContent = 'Edit';

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../public/css/styles.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
+    <title>WebNova - Create Event</title>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="../public/images/logo.webp" alt="Logo" />
+        <h1>WebNova</h1>
+      </a>
+      <nav>
+        <a href="admin-dashboard.html">Dashboard</a>
+        <a href="manage-events.html">Manage Events</a>
+        <a href="create-event.html">Create Events</a>
+        <a href="">Logout</a>
+      </nav>
+    </header>
+    <main>
+      <div class="cardCreate">
+        <h2>Create an event</h2>
+
+        <form action="" class="forms">
+          <label>
+            Title
+            <input class="input" type="text" name="title" placeholder="e.g. Fall Career Fair" required />
+          </label>
+          <label>
+            Description
+            <textarea class="input" name="description" placeholder="Brief description of the event" required></textarea>
+          </label>
+          <label>
+            Category
+            <select class="input" name="category" required>
+              <option value="" disabled selected hidden>Select a category</option>
+              <option value="Academic Workshops">Academic Workshops</option>
+              <option value="Career Events">Career Events</option>
+              <option value="Club Activities">Club Activities</option>
+              <option value="Sports Events">Sports Events</option>
+              <option value="Cultural Events">Cultural Events</option>
+              <option value="Volunteering Events">Volunteering Events</option>
+              <option value="Social Events">Social Events</option>
+              <option value="Guest Lectures">Guest Lectures</option>
+              <option value="Networking Events">Networking Events</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>
+            Event Date
+            <input class="input" type="date" name="event_date" required />
+          </label>
+          <label>
+            Start time
+            <input class="input" type="time" name="start_time" required />
+          </label>
+          <label>
+            End time
+            <input class="input" type="time" name="end_time" required />
+          </label>
+          <label>
+            Location
+            <input class="input" type="text" name="location" placeholder="e.g. Hall Building, 8th Floor" required />
+          </label>
+          <label>
+            Capacity
+            <input class="input" type="number" name="capacity" min="1" placeholder="e.g. 100" required />
+          </label>
+          <label>
+            Status
+            <select class="input" name="status" required>
+              <option value="open">Open</option>
+              <option value="full">Full</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="completed">Completed</option>
+              <option value="disabled">Disabled</option>
+            </select>
+          </label>
+          <label>
+            Organizer ID
+            <input class="input" type="text" name="organizer_id" placeholder="e.g. Career Services" required />
+          </label>
+
+          <button type="submit" class="submitButton">Create</button>
+        </form>
+      </div>
+
+      <div class="displayCard"></div>
+    </main>
+    <footer>
+      <p>© 2026 WebNova. All rights reserved.</p>
+    </footer>
+
+    <script src="../public/js/events-data.js"></script>
+    <script src="../public/js/create-event.js"></script>
+  </body>
+</html>

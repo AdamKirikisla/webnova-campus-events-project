@@ -26,7 +26,8 @@ forms.addEventListener('submit', (e) => {
   // ---------------------------------------------------------------------------
   // 1. BUILD CARDS FROM fakeEvents
   // ---------------------------------------------------------------------------
-  const page = document.querySelector('main');
+  const page = document.querySelector('.displayCard');
+  page.replaceChildren();
 
   const currentIndex = fakeEvents.length - 1;
   const newEventData = fakeEvents[currentIndex];

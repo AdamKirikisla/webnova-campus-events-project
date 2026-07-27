@@ -2,7 +2,6 @@ function stopEnter(e) {
   if (e.key === 'Enter') e.preventDefault();
 }
 
-const card = document.querySelectorAll('.card');
 // ---------------------------------------------------------------------------
 // 1. BUILD CARDS FROM fakeEvents
 // ---------------------------------------------------------------------------

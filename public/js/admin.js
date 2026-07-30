@@ -101,7 +101,9 @@ for (let i of cancelButton) {
     const statusValue = thisCard.querySelector('.status p:last-child');
 
     if (i.textContent === 'Cancel Event') {
-      statusValue.textContent = 'Cancelled';
+      // Save current status BEFORE overwriting it
+      statusValue.dataset.previousStatus = statusValue.textContent;
+      statusValue.textContent = 'cancelled';
       statusValue.style.color = 'red';
       statusValue.style.fontWeight = 'bold';
       i.style.backgroundColor = '#166534';

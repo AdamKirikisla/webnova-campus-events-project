@@ -19,6 +19,11 @@
   --font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -108,5 +113,14 @@ footer {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-color: lightgray;
+}
+
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
 }

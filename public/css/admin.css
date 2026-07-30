@@ -204,21 +204,52 @@ button:hover {
   color: var(--primary-color);
 }
 
+.displayCard {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 2rem;
+}
+
+/* display created card */
 .cardDisplay {
   display: flex;
   flex-direction: column;
-  align-items: center;
   background-color: var(--background-tint);
-  padding: 1rem;
-  border-radius: 0.5rem;
+  padding: 1.5rem 2rem;
+  border-radius: 0.75rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cardDisplay h2 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.cardDisplay .card-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  gap: 0.6rem;
+}
+
+.cardDisplay .card-content > div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-bottom: 0.5rem;
+}
+
+.cardDisplay .card-content > div p:first-child {
+  font-weight: 600;
+  color: #555;
+}
+
+.cardDisplay .card-content > div p:last-child {
+  color: #222;
 }
 
 /* Cancel card display in modify events */

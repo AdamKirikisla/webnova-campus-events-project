@@ -14,6 +14,8 @@ for (let event of fakeEvents) {
   const card = document.createElement('div');
   card.classList.add('card');
 
+  const isCancelled = event.status === 'cancelled';
+
   card.innerHTML = `
     <h2>${event.title}</h2>
     <div class="card-content">
@@ -29,10 +31,14 @@ for (let event of fakeEvents) {
     </div>
     <div class="modifiers">
       <button class="edit">Edit</button>
-      <button class="cancel">Cancel Event</button>
+      <button class="cancel">${isCancelled ? 'Reactivate' : 'Cancel Event'}</button>
       <button class="delete">Delete</button>
     </div>
   `;
+
+  if (isCancelled) {
+    card.classList.add('cancelledCard');
+  }
 
   page.append(card);
 }
@@ -108,10 +114,10 @@ for (let i of cancelButton) {
       statusValue.style.fontWeight = 'bold';
       i.style.backgroundColor = '#166534';
       i.textContent = 'Reactivate';
-      thisCard.classList.add('cancelledCard'); // use classList.add, not i.thisCard.add
+      thisCard.classList.add('cancelledCard');
     } else if (i.textContent === 'Reactivate') {
-      // Restore whatever it was before
-      statusValue.textContent = statusValue.dataset.previousStatus;
+      // Restore whatever it was before, or fall back to 'open' if none was saved
+      statusValue.textContent = statusValue.dataset.previousStatus || 'open';
       statusValue.style.color = '';
       statusValue.style.fontWeight = '';
       i.style.backgroundColor = '';

@@ -52,7 +52,7 @@ formSignup.addEventListener('submit', (e) => {
     return;
   }
 
-  const newUser = { email, password, firstname, lastname, studentId, role: 'student', registeredEvents: [] };
+  const newUser = { email, password, firstName, lastName, studentId, role: 'student', registeredEvents: [] };
   users.push(newUser);
   localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
 

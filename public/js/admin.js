@@ -104,8 +104,17 @@ for (let i of cancelButton) {
       statusValue.textContent = 'Cancelled';
       statusValue.style.color = 'red';
       statusValue.style.fontWeight = 'bold';
+      i.style.backgroundColor = '#166534';
       i.textContent = 'Reactivate';
       thisCard.classList.add('cancelledCard'); // use classList.add, not i.thisCard.add
+    } else if (i.textContent === 'Reactivate') {
+      // Restore whatever it was before
+      statusValue.textContent = statusValue.dataset.previousStatus;
+      statusValue.style.color = '';
+      statusValue.style.fontWeight = '';
+      i.style.backgroundColor = '';
+      i.textContent = 'Cancel Event';
+      thisCard.classList.remove('cancelledCard');
     }
   });
 }

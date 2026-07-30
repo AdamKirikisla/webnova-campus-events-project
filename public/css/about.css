@@ -2,11 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rem; /* Laisse un bon espace de respiration entre le About et le Contact */
+  gap: 4rem;
   padding: 4rem 1rem;
 }
 
-/* Le conteneur réutilisable pour les deux sections */
 .content-card {
   margin-top: 15vh;
   background-color: var(--background-tint);
@@ -16,7 +15,7 @@
   width: 100%;
   max-width: 650px;
   text-align: center;
-  /* L'animation smooth pour quand on clique sur le lien #contact */
+
   scroll-margin-top: 15vh;
 }
 
@@ -33,12 +32,11 @@
   margin-bottom: 1.5rem;
 }
 
-/* La structure du formulaire */
 .contact-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  text-align: left; /* On remet le texte à gauche pour les labels */
+  text-align: left;
   margin-top: 2rem;
 }
 
@@ -53,7 +51,6 @@
   color: var(--primary-color);
 }
 
-/* Le style des champs de texte */
 .form-group input,
 .form-group textarea {
   width: 100%;
@@ -67,11 +64,10 @@
     box-shadow 0.2s;
 }
 
-/* L'effet quand on clique dans un champ de texte (très important pour l'accessibilité/UX) */
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  /* Utilise ta couleur primaire avec de la transparence pour le contour de focus */
+
   box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.2);
 }

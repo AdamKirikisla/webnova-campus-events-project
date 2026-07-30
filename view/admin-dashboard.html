@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../public/css/styles.css" />
-    <link rel="stylesheet" href="../public/css/index.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
     <title>WebNova - Admin Dashboard</title>
   </head>
   <body>
@@ -23,15 +23,26 @@
       </nav>
     </header>
     <main>
-      <div class="card">
-        <h2>Welcome admin</h2>
-        <div class="card-content">
-          <p>Here's what's happening across campus events.</p>
-          <a href="manage-events.html">Manage Events</a>
-          <a href="create-event.html">Create Events</a>
-          <a href="view-registrations.html">View Registrations</a>
-        </div>
-      </div>
+      <h1 id="dashboardHeader">Admin Dashboard</h1>
+      <p id="dashboardDesc">Overview of campus events, registrations, and attendance.
+
+        <!-- Cards -->
+        <section class="statCards">
+          <div>
+            <p class="statTitle">Total Events</p>
+            <p class="statValue">78%</p>
+            <p class="statDesc">All categories</p>
+
+          </div>
+
+            <div>
+            <p class="statTitle">Total Registrations</p>
+            <p class="statValue">612</p>
+            <p class="statDesc">Across all events</p>
+
+          </div>
+        </section>
+      </p>
     </main>
     <footer>
       <p>© 2026 WebNova. All rights reserved.</p>

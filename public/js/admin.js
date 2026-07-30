@@ -94,7 +94,13 @@ for (let i of editButton) {
 // Declare button modifiers
 const cancelButton = document.querySelectorAll('.cancel');
 
-// // Delete Card Logic
-// for (let i of deleteButton) {
-//   i.addEventListener('click', () => i.closest('.card').remove());
-// }
+// Cancel Event Logic
+for (let i of cancelButton) {
+  i.addEventListener('click', () => {
+    if (i.textContent === 'Cancel Event') {
+      const thisCard = i.closest('.card'); // scoped to this handler now
+      const statusValue = thisCard.querySelector('.status p:last-child');
+      statusValue.textContent = 'Cancelled';
+    }
+  });
+}

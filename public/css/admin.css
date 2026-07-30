@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body,
+h1,
+h2,
+h3,
+p,
+a,
+button,
+input,
+select,
+textarea {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
 /* Dashboard */
 #dashboardHeader {
   color: var(--primary-color);

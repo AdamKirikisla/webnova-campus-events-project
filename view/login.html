@@ -65,7 +65,19 @@
             </div>
             <div class="input-group">
               <label for="signup-password">Password</label>
-              <input type="password" id="signup-password" required placeholder="********" />
+              <input
+                type="password"
+                id="signup-password"
+                required
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\S{8,}"
+                oninvalid="
+                  this.setCustomValidity(
+                    'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.'
+                  )
+                "
+                oninput="this.setCustomValidity('')"
+                placeholder="********"
+              />
             </div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>

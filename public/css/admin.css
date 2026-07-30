@@ -126,3 +126,48 @@ button:hover {
   justify-content: center;
   padding: 0.5rem;
 }
+
+.cancel {
+  background-color: rgb(189, 13, 13);
+}
+
+.cancelledCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f7f5f2;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.cancelledCard h2 {
+  color: #9a9a9a;
+  text-decoration: line-through;
+  text-decoration-color: var(--primary-color);
+  text-decoration-thickness: 2px;
+}
+
+.cancelledCard .card-content p {
+  color: #a3a3a3;
+}
+
+/* Diagonal ribbon in the corner instead of a dashed border */
+.cancelledCard::after {
+  content: 'Cancelled';
+  position: absolute;
+  top: 14px;
+  right: -32px;
+  width: 130px;
+  padding: 0.25rem 0;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-align: center;
+  transform: rotate(40deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}

@@ -97,10 +97,15 @@ const cancelButton = document.querySelectorAll('.cancel');
 // Cancel Event Logic
 for (let i of cancelButton) {
   i.addEventListener('click', () => {
+    const thisCard = i.closest('.card'); // declare ONCE, reuse below
+    const statusValue = thisCard.querySelector('.status p:last-child');
+
     if (i.textContent === 'Cancel Event') {
-      const thisCard = i.closest('.card'); // scoped to this handler now
-      const statusValue = thisCard.querySelector('.status p:last-child');
       statusValue.textContent = 'Cancelled';
+      statusValue.style.color = 'red';
+      statusValue.style.fontWeight = 'bold';
+      i.textContent = 'Reactivate';
+      thisCard.classList.add('cancelledCard'); // use classList.add, not i.thisCard.add
     }
   });
 }

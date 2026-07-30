@@ -1,3 +1,6 @@
+// This code is for managing/ editing events
+
+// So the user can't spam 'enter'
 function stopEnter(e) {
   if (e.key === 'Enter') e.preventDefault();
 }
@@ -26,6 +29,7 @@ for (let event of fakeEvents) {
     </div>
     <div class="modifiers">
       <button class="edit">Edit</button>
+      <button class="cancel">Cancel Event</button>
       <button class="delete">Delete</button>
     </div>
   `;
@@ -84,3 +88,13 @@ for (let i of editButton) {
     }
   });
 }
+
+// Cancel event logic
+
+// Declare button modifiers
+const cancelButton = document.querySelectorAll('.cancel');
+
+// // Delete Card Logic
+// for (let i of deleteButton) {
+//   i.addEventListener('click', () => i.closest('.card').remove());
+// }

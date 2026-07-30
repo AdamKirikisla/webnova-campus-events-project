@@ -57,7 +57,7 @@ formSignup.addEventListener('submit', (e) => {
   localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
 
   alert('Compte créé avec succès ! Tu peux maintenant te connecter.');
-  toggleLogin.click(); // Ramène l'utilisateur à l'écran de connexion
+  toggleLogin.click();
   formSignup.reset();
 });
 
@@ -77,7 +77,11 @@ formLogin.addEventListener('submit', (e) => {
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
-    const sessionUser = { name: `${user.firstName} ${user.lastName}`.trim(), email: user.email, role: user.role ?? 'student' };
+    const sessionUser = {
+      name: `${user.firstName} ${user.lastName}`.trim(),
+      email: user.email,
+      role: user.role ?? 'student',
+    };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';
   } else {

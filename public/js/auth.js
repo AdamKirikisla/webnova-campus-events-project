@@ -77,7 +77,7 @@ formLogin.addEventListener('submit', (e) => {
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
-    const sessionUser = { name: user.name, email: user.email, role: 'student' };
+    const sessionUser = { name: `${user.firstName} ${user.lastName}`.trim(), email: user.email, role: user.role ?? 'student' };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';
   } else {

@@ -326,3 +326,86 @@ button:hover {
   transform: rotate(40deg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  /* tablets */
+  header {
+    padding: 1rem;
+  }
+
+  header nav {
+    gap: 0.15rem;
+  }
+
+  header nav a {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .statCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .cardCreate,
+  .displayCard {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  /* phones */
+  header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 0.75rem;
+  }
+
+  header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  header nav a.logout {
+    margin-left: 0;
+  }
+
+  .logo-link h1 {
+    font-size: 1.2rem;
+  }
+
+  .statCards {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard {
+    padding: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .cardCreate {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .statTitle {
+    font-size: 1.1rem;
+  }
+
+  .statValue {
+    font-size: 1.6rem;
+  }
+
+  .modifiers {
+    flex-direction: column;
+  }
+
+  .cancelledCard::after {
+    font-size: 0.65rem;
+    width: 110px;
+  }
+}

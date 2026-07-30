@@ -7,7 +7,6 @@
 }
 
 .content-card {
-  margin-top: 15vh;
   background-color: var(--background-tint);
   padding: 3rem;
   border-radius: 1rem;
@@ -15,7 +14,9 @@
   width: 100%;
   max-width: 650px;
   text-align: center;
+}
 
+#contact {
   scroll-margin-top: 15vh;
 }
 

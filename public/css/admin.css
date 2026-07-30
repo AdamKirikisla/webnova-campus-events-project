@@ -1,5 +1,22 @@
 /* Dashboard */
 
+.statCards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+.statCard {
+  background-color: var(--background-tint);
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f4c5ce;
+
+  text-align: center;
+}
+
 a {
   color: var(--primary-color);
   text-decoration: none;

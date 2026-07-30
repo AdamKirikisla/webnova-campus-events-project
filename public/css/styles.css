@@ -110,3 +110,13 @@ footer {
   padding: 1rem;
   background-color: lightgray;
 }
+
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+}

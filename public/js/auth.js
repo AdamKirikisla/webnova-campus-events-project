@@ -43,12 +43,12 @@ formSignup.addEventListener('submit', (e) => {
   const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
 
   if (users.find((u) => u.email === email)) {
-    alert('Ce courriel est déjà utilisé !');
+    alert('This email is already in use.');
     return;
   }
 
   if (users.find((u) => u.studentId === studentId)) {
-    alert('Cet ID étudiant est déjà utilisé !');
+    alert('This student ID is already in use.');
     return;
   }
 

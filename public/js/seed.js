@@ -17,7 +17,7 @@ const initDemoData = () => {
     const users = [demoStudent];
     localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
 
-    console.log("Base de données initialisée avec l'étudiant de démo !");
+    // Demo user initialized.
   }
 };
 

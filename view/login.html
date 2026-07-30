@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../public/css/login.css" />
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <title>WebNova - Login</title>
-    <script src="../public/js/events-data.js" defer></script>
+    <!-- <script src="../public/js/events-data.js" defer></script> -->
     <script src="../public/js/seed.js" defer></script>
     <script src="../public/js/auth.js" defer></script>
   </head>
@@ -16,8 +16,8 @@
       <div class="auth-wrapper">
         <div class="auth-card">
           <div class="auth-header">
-            <button id="toggle-login">Login</button>
-            <button id="toggle-signup">Sign Up</button>
+            <button id="toggle-login" type="button">Login</button>
+            <button id="toggle-signup" type="button">Sign Up</button>
           </div>
 
           <!-- Connexion form -->
@@ -55,11 +55,11 @@
                 name="student_id"
                 required
                 pattern="[0-9]{8}"
-                placeholder="8-Digits Student ID"
+                placeholder="8-digit Student ID"
               />
             </div>
             <div class="input-group">
-              <label for="signup-email">StudentEmail</label>
+              <label for="signup-email">Student Email</label>
               <input type="email" id="signup-email" required placeholder="user@live.concordia.ca" />
             </div>
             <div class="input-group">

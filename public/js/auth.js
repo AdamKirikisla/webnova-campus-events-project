@@ -43,12 +43,12 @@ formSignup.addEventListener('submit', (e) => {
   const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
 
   if (users.find((u) => u.email === email)) {
-    alert('Ce courriel est déjà utilisé !');
+    alert('This email is already in use.');
     return;
   }
 
   if (users.find((u) => u.studentId === studentId)) {
-    alert('Cet ID étudiant est déjà utilisé !');
+    alert('This student ID is already in use.');
     return;
   }
 
@@ -77,7 +77,7 @@ formLogin.addEventListener('submit', (e) => {
   const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
-    const sessionUser = { name: user.name, email: user.email, role: 'student' };
+    const sessionUser = { name: `${user.firstName} ${user.lastName}`.trim(), email: user.email, role: user.role ?? 'student' };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';
   } else {

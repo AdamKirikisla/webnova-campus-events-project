@@ -1,0 +1,144 @@
+:root {
+  --primary-color: #912338;
+  --secondary-color: #cbb576;
+  --background-tint: #e9d3d7;
+  --background-tint2: #e9e3d3;
+
+  --success-color: #4caf50;
+  --error-color: #f44336;
+
+  --font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  background-color: rgb(240, 238, 238);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.auth-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.back-home {
+  margin-top: 20px;
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.back-home:hover {
+  color: var(--primary-hover);
+}
+
+.auth-card {
+  background: var(--background-tint);
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.auth-header {
+  display: flex;
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.auth-header button {
+  flex: 1;
+  padding: 15px;
+  background: #f9fafb;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.3s ease;
+}
+
+.auth-header button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.auth-form {
+  padding: 30px;
+}
+
+.auth-form h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Met les éléments côte à côte */
+.input-row {
+  display: flex;
+  gap: 12px; /* L'espace entre les deux champs */
+  margin-bottom: 16px;
+}
+
+/* Assure que chaque champ prend exactement 50% de la largeur */
+.input-row .input-group {
+  flex: 1;
+  margin-bottom: 0; /* Enlève la marge du bas puisqu'elle est gérée par la row */
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.hidden {
+  display: none;
+}

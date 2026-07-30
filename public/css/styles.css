@@ -16,7 +16,14 @@
   --success-color: #4caf50;
   --error-color: #f44336;
 
-  --font-family: 'Arial', sans-serif;
+  --font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: var(--font-family);
 }
 
 /* --- Global components : btn --- */
@@ -85,12 +92,6 @@ header nav {
   max-height: 3rem;
   width: auto;
   object-fit: contain;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 main {

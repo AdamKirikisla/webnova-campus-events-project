@@ -36,8 +36,8 @@ formSignup.addEventListener('submit', (e) => {
 
   const email = document.getElementById('signup-email').value;
   const password = document.getElementById('signup-password').value;
-  const firstname = document.getElementById('signup-firstname').value;
-  const lastname = document.getElementById('signup-lastname').value;
+  const firstName = document.getElementById('signup-firstname').value;
+  const lastName = document.getElementById('signup-lastname').value;
   const studentId = document.getElementById('signup-id').value;
 
   const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];

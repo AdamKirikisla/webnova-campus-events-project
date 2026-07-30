@@ -7,6 +7,7 @@ a {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 3rem;
+  align-items: start; /* doesn't push cancelled logic down*/
 }
 .card {
   display: flex;
@@ -16,6 +17,7 @@ a {
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%; /* doesn't push cancelled logic down*/
 }
 
 .card h2 {
@@ -49,6 +51,7 @@ a {
   justify-content: space-between;
   width: 100%;
   gap: 1rem;
+  margin-top: auto; /* doesn't push cancelled logic down*/
 }
 button {
   background-color: var(--primary-color);

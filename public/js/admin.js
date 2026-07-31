@@ -14,9 +14,9 @@ for (let event of fakeEvents) {
   const card = document.createElement('div');
   card.classList.add('card');
 
-  const isCancelled = event.status === 'cancelled';
+  /*const isCancelled = event.status === 'cancelled';*/
 
-  card.innerHTML = `
+  /*card.innerHTML = `
     <h2>${event.title}</h2>
     <div class="card-content">
       <div class="description"><p>Description</p><p>${event.description}</p></div>
@@ -34,11 +34,28 @@ for (let event of fakeEvents) {
       <button class="cancel">${isCancelled ? 'Reactivate' : 'Cancel Event'}</button>
       <button class="delete">Delete</button>
     </div>
-  `;
+  `;*/
 
-  if (isCancelled) {
-    card.classList.add('cancelledCard');
-  }
+  card.innerHTML = `
+    <h2>${event.title}</h2>
+    <div class="card-content">
+      <!-- On combine 'row' pour le CSS et le nom du champ pour son JS -->
+      <div class="row description"><p>Description</p><p>${event.description}</p></div>
+      <div class="row category"><p>Category</p><p>${event.category}</p></div>
+      <div class="row event_date"><p>Date</p><p>${event.event_date}</p></div>
+      <div class="row start_time"><p>Start Time</p><p>${event.start_time}</p></div>
+      <div class="row end_time"><p>End Time</p><p>${event.end_time}</p></div>
+      <div class="row location"><p>Location</p><p>${event.location}</p></div>
+      <div class="row capacity"><p>Capacity</p><p>${event.capacity}</p></div>
+      <div class="row organizer_id"><p>Organizer</p><p>${event.organizer_id}</p></div>
+      <div class="row status"><p>Status</p><p>${event.status}</p></div>
+    </div>
+    <div class="modifiers">
+      <!-- On injecte tes classes globales pour uniformiser le site -->
+      <button class="btn btn-outline edit">Edit</button>
+      <button class="btn btn-primary delete">Delete</button>
+    </div>
+  `;
 
   page.append(card);
 }
@@ -98,7 +115,7 @@ for (let i of editButton) {
 // Cancel event logic
 
 // Declare button modifiers
-const cancelButton = document.querySelectorAll('.cancel');
+/*const cancelButton = document.querySelectorAll('.cancel');
 
 // Cancel Event Logic
 for (let i of cancelButton) {
@@ -125,4 +142,4 @@ for (let i of cancelButton) {
       thisCard.classList.remove('cancelledCard');
     }
   });
-}
+}*/

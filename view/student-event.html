@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../public/css/styles.css" />
+    <link rel="stylesheet" href="../public/css/student.css" />
+    <title>Student Event</title>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="../public/images/logo.webp" alt="Logo" class="logo" />
+        <h1>Webnova</h1>
+      </a>
+    </header>
+    <main>
+      <div class="dashboard-shell">
+        <section class="hero-card">
+          <div>
+            <h1>Student Events</h1>
+            <p>Welcome to the Student Events page!</p>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <div class="panel">
+            <h3>Upcoming Events</h3>
+            <ul id="upcoming-events-list"></ul>
+          </div>
+
+          <div class="panel">
+            <h3>Past Events</h3>
+            <ul id="past-events-list"></ul>
+          </div>
+
+          <div class="panel">
+            <h3>Event Registration</h3>
+            <p>Register for upcoming events below:</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../public/js/events-data.js"></script>
+    <script>
+      const today = new Date();
+      const upcomingEvents = fakeEvents
+        .filter((event) => new Date(event.event_date) >= today)
+        .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+      const pastEvents = fakeEvents
+        .filter((event) => new Date(event.event_date) < today)
+        .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+
+      function renderEventList(listElement, events) {
+        if (!events.length) {
+          listElement.innerHTML = '<li class="event-item"><strong>No events available.</strong></li>';
+          return;
+        }
+
+        listElement.innerHTML = events
+          .map(
+            (event) => `
+                            <li class="event-item">
+                                <strong>${event.title}</strong>
+                                <span class="muted">${event.event_date} • ${event.start_time} • ${event.location}</span>
+                            </li>
+                        `
+          )
+          .join('');
+      }
+
+      renderEventList(document.getElementById('upcoming-events-list'), upcomingEvents);
+      renderEventList(document.getElementById('past-events-list'), pastEvents);
+    </script>
+
+    <footer>
+      <p>; 2026 Webnova. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

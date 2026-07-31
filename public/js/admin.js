@@ -69,7 +69,7 @@ for (let i of deleteButton) {
 }
 
 // Edit Card Logic
-const editButton = document.querySelectorAll('.edit');
+/*const editButton = document.querySelectorAll('.edit');
 
 // list of every class name that holds an editable value, matching the schema fields
 const editableFields = [
@@ -108,6 +108,185 @@ for (let i of editButton) {
       }
 
       i.textContent = 'Edit';
+    }
+  });
+}*/
+
+// --- UTILITAIRES POUR LES DATES ET HEURES ---
+// Traduit "Sep 12, 2026" en "2026-09-12" pour l'input type="date"
+function toInputDate(dateStr) {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    return d.toISOString().split('T')[0];
+  } catch (e) {
+    return dateStr;
+  }
+}
+
+// Traduit "2026-09-12" en "Sep 12, 2026" pour l'affichage visuel
+function toDisplayDate(dateStr) {
+  try {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch (e) {
+    return dateStr;
+  }
+}
+
+// Traduit "1:00 PM" en "13:00" pour l'input type="time"
+function toInputTime(timeStr) {
+  try {
+    const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!match) return timeStr;
+    let [_, hours, mins, modifier] = match;
+    if (hours === '12') hours = '00';
+    if (modifier.toUpperCase() === 'PM') hours = parseInt(hours, 10) + 12;
+    return `${hours.toString().padStart(2, '0')}:${mins}`;
+  } catch (e) {
+    return timeStr;
+  }
+}
+
+// Traduit "13:00" en "1:00 PM" pour l'affichage visuel
+function toDisplayTime(timeStr) {
+  try {
+    let [hours, mins] = timeStr.split(':');
+    if (!hours) return timeStr;
+    hours = parseInt(hours, 10);
+    const modifier = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return `${hours}:${mins} ${modifier}`;
+  } catch (e) {
+    return timeStr;
+  }
+}
+// ---------------------------------------------
+
+// Edit Card Logic
+const editButton = document.querySelectorAll('.edit');
+
+const editableFields = [
+  'description',
+  'category',
+  'event_date',
+  'start_time',
+  'end_time',
+  'location',
+  'capacity',
+  'organizer_id',
+  'status',
+];
+
+for (let btn of editButton) {
+  btn.addEventListener('click', () => {
+    const thisCard = btn.closest('.card');
+
+    if (btn.textContent === 'Edit') {
+      for (let fieldClass of editableFields) {
+        const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
+        const currentValue = valueContainer.textContent.trim();
+        valueContainer.classList.add('editing'); // Pour débloquer la hauteur de la description
+
+        let inputHTML = '';
+
+        // On injecte le bon type d'input selon le champ
+        if (fieldClass === 'category') {
+          inputHTML = `
+            <select class="input edit-input">
+              <option value="Academic Workshops" ${currentValue === 'Academic Workshops' ? 'selected' : ''}>Academic Workshops</option>
+              <option value="Career Events" ${currentValue === 'Career Events' ? 'selected' : ''}>Career Events</option>
+              <option value="Club Activities" ${currentValue === 'Club Activities' ? 'selected' : ''}>Club Activities</option>
+              <option value="Sports Events" ${currentValue === 'Sports Events' ? 'selected' : ''}>Sports Events</option>
+              <option value="Cultural Events" ${currentValue === 'Cultural Events' ? 'selected' : ''}>Cultural Events</option>
+              <option value="Volunteering Events" ${currentValue === 'Volunteering Events' ? 'selected' : ''}>Volunteering Events</option>
+              <option value="Social Events" ${currentValue === 'Social Events' ? 'selected' : ''}>Social Events</option>
+              <option value="Guest Lectures" ${currentValue === 'Guest Lectures' ? 'selected' : ''}>Guest Lectures</option>
+              <option value="Networking Events" ${currentValue === 'Networking Events' ? 'selected' : ''}>Networking Events</option>
+              <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+            </select>
+          `;
+        } else if (fieldClass === 'status') {
+          inputHTML = `
+            <select class="input edit-input">
+              <option value="open" ${currentValue === 'open' ? 'selected' : ''}>Open</option>
+              <option value="full" ${currentValue === 'full' ? 'selected' : ''}>Full</option>
+              <option value="cancelled" ${currentValue === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+              <option value="completed" ${currentValue === 'completed' ? 'selected' : ''}>Completed</option>
+              <option value="disabled" ${currentValue === 'disabled' ? 'selected' : ''}>Disabled</option>
+            </select>
+          `;
+        } else if (fieldClass === 'event_date') {
+          const today = new Date().toISOString().split('T')[0];
+          inputHTML = `<input type="date" class="input edit-input" min="${today}" value="${toInputDate(currentValue)}">`;
+        } else if (fieldClass === 'start_time' || fieldClass === 'end_time') {
+          inputHTML = `<input type="time" class="input edit-input" value="${toInputTime(currentValue)}">`;
+        } else if (fieldClass === 'capacity') {
+          inputHTML = `<input type="number" class="input edit-input" min="1" value="${currentValue}">`;
+        } else if (fieldClass === 'description') {
+          inputHTML = `<textarea class="input edit-input" rows="3">${currentValue}</textarea>`;
+        } else {
+          // location et organizer_id tombent ici (text basique)
+          inputHTML = `<input type="text" class="input edit-input" value="${currentValue}">`;
+        }
+
+        valueContainer.innerHTML = inputHTML;
+      }
+
+      // On change le bouton Edit en bouton Save primaire
+      btn.textContent = 'Save';
+      btn.classList.remove('btn-outline');
+      btn.classList.add('btn-primary');
+    } else if (btn.textContent === 'Save') {
+      let isValid = true;
+      const allInputs = thisCard.querySelectorAll('.edit-input');
+
+      allInputs.forEach((input) => {
+        if (input.value.trim() === '') {
+          input.style.borderColor = 'red'; // Mets le champ en rouge
+          isValid = false;
+        } else {
+          input.style.borderColor = 'var(--primary-color)';
+        }
+      });
+
+      if (!isValid) {
+        alert('Aucun champ ne peut être vide ou commencer par un espace vide.');
+        return; // Arrête l'exécution, on ne sauvegarde pas
+      }
+
+      const startInput = thisCard.querySelector('.start_time .edit-input');
+      const endInput = thisCard.querySelector('.end_time .edit-input');
+
+      if (startInput && endInput && startInput.value >= endInput.value) {
+        startInput.style.borderColor = 'red';
+        endInput.style.borderColor = 'red';
+        alert("L'heure de fin doit être APRÈS l'heure de début.");
+        return; // Arrête l'exécution
+      }
+
+      for (let fieldClass of editableFields) {
+        const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
+        const inputEl = valueContainer.querySelector('.edit-input');
+
+        if (inputEl) {
+          let newValue = inputEl.value;
+
+          // Reconvertir la date et l'heure en format d'affichage beau pour l'humain
+          if (inputEl.type === 'date') newValue = toDisplayDate(newValue);
+          if (inputEl.type === 'time') newValue = toDisplayTime(newValue);
+
+          valueContainer.textContent = newValue; // Remplace le html par le simple texte
+        }
+
+        valueContainer.classList.remove('editing'); // Restaure la limite de 3 lignes
+      }
+
+      // On remet le bouton à son état normal
+      btn.textContent = 'Edit';
+      btn.classList.add('btn-outline');
+      btn.classList.remove('btn-primary');
     }
   });
 }

@@ -153,6 +153,19 @@ a {
   margin-bottom: 1.5rem; /* Espace avant les boutons */
 }
 
+/* S'assure que les nouveaux inputs rentrent parfaitement à droite dans la rangée */
+.card-content .edit-input {
+  width: 100%;
+  max-width: 200px; /* Empêche l'input de déborder sur le label */
+  padding: 0.25rem 0.5rem;
+  margin: -0.25rem 0; /* Annule le padding pour éviter que la carte sautille */
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.25rem;
+  background-color: white;
+}
+
 /* L'alignement gauche/droite pour chaque ligne d'information */
 .card-content > div.row {
   display: flex;
@@ -187,13 +200,20 @@ a {
 }
 
 /* LE DÉTAIL DE PRO : En mode édition, on débloque la hauteur pour voir ce qu'on tape */
-.card-content > div.description p:last-child.selected {
+.card-content > div.description p:last-child.editing {
   display: block;
   height: auto;
   min-height: 4.2em;
 
   /* Force le texte à se casser même s'il n'y a pas d'espace (pour les sssssssss) */
   word-break: break-all;
+}
+
+/* On force le textarea à prendre toute la largeur disponible */
+.card-content > div.description .edit-input {
+  max-width: 100%;
+  width: 100%;
+  resize: vertical;
 }
 
 /* When selected */

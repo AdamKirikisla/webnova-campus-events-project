@@ -98,7 +98,7 @@ body {
 
 header {
   display: flex;
-  min-height: 10vh;
+  height: 80px;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;

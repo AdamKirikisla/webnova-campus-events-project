@@ -1,21 +1,5 @@
-:root {
-  --primary-color: #912338;
-  --secondary-color: #cbb576;
-  --background-tint: #e9d3d7;
-  --background-tint2: #e9e3d3;
-
-  --success-color: #4caf50;
-  --error-color: #f44336;
-
-  --border-color: #d1d5db;
-  --primary-hover: #7a1c2f;
-
-  --font-family: 'Segoe UI', system-ui, sans-serif;
-}
-
 body {
   background-color: rgb(240, 238, 238);
-  font-family: var(--font-family);
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -47,6 +31,7 @@ body {
   background: var(--background-tint);
   width: 100%;
   max-width: 400px;
+  min-width: 300px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   overflow: hidden;
@@ -65,7 +50,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--primary-color);
   transition: all 0.3s ease;
 }
 
@@ -79,6 +64,7 @@ body {
 }
 
 .auth-form h2 {
+  color: var(--primary-color);
   margin-top: 0;
   margin-bottom: 24px;
   font-size: 1.5rem;
@@ -125,19 +111,9 @@ body {
 .btn-primary {
   width: 100%;
   padding: 12px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
   margin-top: 10px;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover);
 }
 
 .hidden {

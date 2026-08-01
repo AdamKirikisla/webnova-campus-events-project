@@ -7,13 +7,10 @@
 }
 
 .content-card {
-  background-color: var(--background-tint);
+  margin-top: 10vh;
   padding: 3rem;
-  border-radius: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 650px;
-  text-align: center;
+  max-width: 500px;
 }
 
 #contact {
@@ -34,6 +31,7 @@
 }
 
 .contact-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

@@ -1,13 +1,7 @@
-// This code is for managing/ editing events
-
-// So the user can't spam 'enter'
 function stopEnter(e) {
   if (e.key === 'Enter') e.preventDefault();
 }
 
-// ---------------------------------------------------------------------------
-// 1. BUILD CARDS FROM fakeEvents
-// ---------------------------------------------------------------------------
 const page = document.querySelector('.page');
 
 for (let event of fakeEvents) {
@@ -41,7 +35,6 @@ for (let event of fakeEvents) {
       <h2>${event.title}</h2>
     </div>
     <div class="card-content">
-      <!-- On combine 'row' pour le CSS et le nom du champ pour son JS -->
       <div class="row description"><p>Description</p><p>${event.description}</p></div>
       <div class="row category"><p>Category</p><p>${event.category}</p></div>
       <div class="row event_date"><p>Date</p><p>${event.event_date}</p></div>
@@ -62,10 +55,8 @@ for (let event of fakeEvents) {
   page.append(card);
 }
 
-// Declare button modifiers
 const deleteButton = document.querySelectorAll('.delete');
 
-// Delete Card Logic
 for (let i of deleteButton) {
   i.addEventListener('click', () => i.closest('.card').remove());
 }
@@ -114,8 +105,6 @@ for (let i of editButton) {
   });
 }*/
 
-// --- UTILITAIRES POUR LES DATES ET HEURES ---
-// Traduit "Sep 12, 2026" en "2026-09-12" pour l'input type="date"
 function toInputDate(dateStr) {
   try {
     const d = new Date(dateStr);
@@ -126,7 +115,6 @@ function toInputDate(dateStr) {
   }
 }
 
-// Traduit "2026-09-12" en "Sep 12, 2026" pour l'affichage visuel
 function toDisplayDate(dateStr) {
   try {
     if (!dateStr) return '';
@@ -137,7 +125,6 @@ function toDisplayDate(dateStr) {
   }
 }
 
-// Traduit "1:00 PM" en "13:00" pour l'input type="time"
 function toInputTime(timeStr) {
   try {
     const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
@@ -151,7 +138,6 @@ function toInputTime(timeStr) {
   }
 }
 
-// Traduit "13:00" en "1:00 PM" pour l'affichage visuel
 function toDisplayTime(timeStr) {
   try {
     let [hours, mins] = timeStr.split(':');
@@ -164,9 +150,7 @@ function toDisplayTime(timeStr) {
     return timeStr;
   }
 }
-// ---------------------------------------------
 
-// Edit Card Logic
 const editButton = document.querySelectorAll('.edit');
 
 const editableFields = [
@@ -189,11 +173,9 @@ for (let btn of editButton) {
       for (let fieldClass of editableFields) {
         const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
         const currentValue = valueContainer.textContent.trim();
-        valueContainer.classList.add('editing'); // Pour débloquer la hauteur de la description
+        valueContainer.classList.add('editing');
 
         let inputHTML = '';
-
-        // On injecte le bon type d'input selon le champ
         if (fieldClass === 'category') {
           inputHTML = `
             <select class="input edit-input">
@@ -229,14 +211,11 @@ for (let btn of editButton) {
         } else if (fieldClass === 'description') {
           inputHTML = `<textarea class="input edit-input" rows="3">${currentValue}</textarea>`;
         } else {
-          // location et organizer_id tombent ici (text basique)
           inputHTML = `<input type="text" class="input edit-input" value="${currentValue}">`;
         }
 
         valueContainer.innerHTML = inputHTML;
       }
-
-      // On change le bouton Edit en bouton Save primaire
       btn.textContent = 'Save';
       btn.classList.remove('btn-outline');
       btn.classList.add('btn-primary');
@@ -246,7 +225,7 @@ for (let btn of editButton) {
 
       allInputs.forEach((input) => {
         if (input.value.trim() === '') {
-          input.style.borderColor = 'red'; // Mets le champ en rouge
+          input.style.borderColor = 'red';
           isValid = false;
         } else {
           input.style.borderColor = 'var(--primary-color)';
@@ -254,8 +233,8 @@ for (let btn of editButton) {
       });
 
       if (!isValid) {
-        alert('Aucun champ ne peut être vide ou commencer par un espace vide.');
-        return; // Arrête l'exécution, on ne sauvegarde pas
+        alert('No feild can be empty or start with a space.');
+        return;
       }
 
       const startInput = thisCard.querySelector('.start_time .edit-input');
@@ -265,7 +244,7 @@ for (let btn of editButton) {
         startInput.style.borderColor = 'red';
         endInput.style.borderColor = 'red';
         alert("L'heure de fin doit être APRÈS l'heure de début.");
-        return; // Arrête l'exécution
+        return;
       }
 
       for (let fieldClass of editableFields) {
@@ -274,18 +253,14 @@ for (let btn of editButton) {
 
         if (inputEl) {
           let newValue = inputEl.value;
-
-          // Reconvertir la date et l'heure en format d'affichage beau pour l'humain
           if (inputEl.type === 'date') newValue = toDisplayDate(newValue);
           if (inputEl.type === 'time') newValue = toDisplayTime(newValue);
 
-          valueContainer.textContent = newValue; // Remplace le html par le simple texte
+          valueContainer.textContent = newValue;
         }
 
-        valueContainer.classList.remove('editing'); // Restaure la limite de 3 lignes
+        valueContainer.classList.remove('editing');
       }
-
-      // On remet le bouton à son état normal
       btn.textContent = 'Edit';
       btn.classList.add('btn-outline');
       btn.classList.remove('btn-primary');

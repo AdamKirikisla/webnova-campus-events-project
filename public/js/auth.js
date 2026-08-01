@@ -56,7 +56,7 @@ formSignup.addEventListener('submit', (e) => {
   users.push(newUser);
   localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
 
-  alert('Compte créé avec succès ! Tu peux maintenant te connecter.');
+  alert('Account created successfully! You can now log in.');
   toggleLogin.click();
   formSignup.reset();
 });
@@ -85,6 +85,6 @@ formLogin.addEventListener('submit', (e) => {
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';
   } else {
-    alert('Courriel ou mot de passe incorrect.');
+    alert('Invalid email or password.');
   }
 });

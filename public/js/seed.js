@@ -1,5 +1,3 @@
-// Fake Student for dev / demo purposes
-
 const initDemoData = () => {
   const existingUsers = localStorage.getItem('eventPlatformUsers');
 
@@ -16,8 +14,6 @@ const initDemoData = () => {
 
     const users = [demoStudent];
     localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
-
-    // Demo user initialized.
   }
 };
 

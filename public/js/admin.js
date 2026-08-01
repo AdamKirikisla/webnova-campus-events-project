@@ -37,7 +37,9 @@ for (let event of fakeEvents) {
   `;*/
 
   card.innerHTML = `
-    <h2>${event.title}</h2>
+    <div class="card-header">
+      <h2>${event.title}</h2>
+    </div>
     <div class="card-content">
       <!-- On combine 'row' pour le CSS et le nom du champ pour son JS -->
       <div class="row description"><p>Description</p><p>${event.description}</p></div>

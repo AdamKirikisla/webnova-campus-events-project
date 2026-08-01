@@ -122,26 +122,30 @@ a {
 
 /* La base de la carte moderne */
 .card {
-  display: flex;
-  flex-direction: column;
-  background-color: white; /* Plus propre qu'un gros fond rose */
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* Ombre très douce */
+  background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.05); /* Délimitation subtile */
   padding: 1.5rem;
+  min-height: 600px;
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
 
+.card .btn {
+  margin-top: 1rem;
+}
+
+.card-header {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
 /* Le titre aligné à gauche avec une bordure de séparation */
 .card h2 {
-  color: var(--primary-color);
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-  text-align: left;
-  border-bottom: 2px solid rgba(145, 35, 56, 0.1);
-  padding-bottom: 0.75rem;
+  font-size: auto;
 }
 
 /* Le conteneur principal */
@@ -150,7 +154,7 @@ a {
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
-  margin-bottom: 1.5rem; /* Espace avant les boutons */
+  margin-bottom: 0; /* Espace avant les boutons */
 }
 
 /* S'assure que les nouveaux inputs rentrent parfaitement à droite dans la rangée */
@@ -158,7 +162,7 @@ a {
   width: 100%;
   max-width: 200px; /* Empêche l'input de déborder sur le label */
   padding: 0.25rem 0.5rem;
-  margin: -0.25rem 0; /* Annule le padding pour éviter que la carte sautille */
+  margin: 0; /* Annule le padding pour éviter que la carte sautille */
   font-family: var(--font-family);
   font-size: 0.9rem;
   border: 1px solid var(--primary-color);
@@ -170,8 +174,9 @@ a {
 .card-content > div.row {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  padding-bottom: 0.5rem;
+  align-items: center;
+  padding-bottom: 0.35rem;
+  min-height: 36.6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   font-size: 0.95rem;
 }
@@ -199,11 +204,15 @@ a {
   word-wrap: break-word;
 }
 
+.card-content > div.description {
+  align-items: flex-start;
+  min-height: 85.25px; /* 3 lignes de texte */
+}
+
 /* LE DÉTAIL DE PRO : En mode édition, on débloque la hauteur pour voir ce qu'on tape */
 .card-content > div.description p:last-child.editing {
   display: block;
   height: auto;
-  min-height: 4.2em;
 
   /* Force le texte à se casser même s'il n'y a pas d'espace (pour les sssssssss) */
   word-break: break-all;
@@ -214,6 +223,7 @@ a {
   max-width: 100%;
   width: 100%;
   resize: vertical;
+  margin: 0.25rem 0;
 }
 
 /* When selected */
@@ -240,8 +250,8 @@ a {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: auto;
-  padding-top: 1rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /*button {

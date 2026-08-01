@@ -1,7 +1,6 @@
 const forms = document.querySelector('.forms');
 const input = document.querySelectorAll('.input');
 
-// 1. AJOUT : Bloquer les dates dans le passé dès le chargement de la page
 const dateInput = document.querySelector('input[name="event_date"]');
 if (dateInput) {
   const today = new Date().toISOString().split('T')[0];
@@ -11,16 +10,15 @@ if (dateInput) {
 forms.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // 2. AJOUT : Valider les données avant de construire la carte
   const descriptionValue = forms.description.value.trim();
   if (descriptionValue === '') {
-    alert('La description ne peut pas être vide ou ne contenir que des espaces.');
-    return; // Le return est crucial, il empêche l'événement de se créer
+    alert('Description cannot be empty or contain only spaces.');
+    return;
   }
 
   if (forms.start_time.value >= forms.end_time.value) {
-    alert("L'heure de fin doit être APRÈS l'heure de début !");
-    return; // Le return tue la fonction ici aussi
+    alert('The end time must be AFTER the start time!');
+    return;
   }
 
   const newEvent = {
@@ -38,13 +36,10 @@ forms.addEventListener('submit', (e) => {
     created_on: new Date().toLocaleDateString(),
   };
 
-  fakeEvents.push(newEvent); // adds to the SAME shared array your cards are built from
+  fakeEvents.push(newEvent);
 
   console.log(fakeEvents);
 
-  // ---------------------------------------------------------------------------
-  // 1. BUILD CARDS FROM fakeEvents
-  // ---------------------------------------------------------------------------
   const page = document.querySelector('.displayCard');
   page.replaceChildren();
 

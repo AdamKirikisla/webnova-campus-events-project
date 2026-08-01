@@ -55,6 +55,27 @@ main {
   gap: 1rem;
 }
 
+.search-bar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font: inherit;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar:focus {
+  outline: 2px solid var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
 .panel h2 {
   margin-top: 0;
   margin-bottom: 0.8rem;
@@ -71,6 +92,17 @@ main {
 .event-item strong {
   display: block;
   margin-bottom: 0.2rem;
+}
+
+.event-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.event-link:hover {
+  color: var(--primary-color);
 }
 
 .muted {

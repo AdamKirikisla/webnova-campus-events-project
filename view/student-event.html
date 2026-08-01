@@ -1,3 +1,7 @@
+<!---Student Events page,
+Linked to the hard coded data in events-data.js
+-->
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,7 +15,7 @@
     <header>
       <a href="index.html" class="logo-link">
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
-        <h1>Webnova</h1>
+        <h1>WebNova</h1>
       </a>
     </header>
     <main>
@@ -23,21 +27,28 @@
           </div>
         </section>
 
+        <div class="search-bar-wrapper">
+          <input type="text" class="search-bar" placeholder="Search events..." aria-label="Search events" />
+        </div>
+
         <div class="dashboard-grid">
           <div class="panel">
             <h3>Upcoming Events</h3>
             <ul id="upcoming-events-list"></ul>
+            <div style="margin-top: 0.8rem">
+              <a href="upcoming-events.html" class="btn btn-outline">See more</a>
+            </div>
           </div>
 
           <div class="panel">
             <h3>Past Events</h3>
             <ul id="past-events-list"></ul>
           </div>
+        </div>
 
-          <div class="panel">
-            <h3>Event Registration</h3>
-            <p>Register for upcoming events below:</p>
-          </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem">
+          <a href="event-registration.html" class="btn btn-primary">Register for Event</a>
+          <a href="my-events.html" class="btn btn-outline">View My Events</a>
         </div>
       </div>
     </main>
@@ -62,8 +73,10 @@
           .map(
             (event) => `
                             <li class="event-item">
-                                <strong>${event.title}</strong>
-                                <span class="muted">${event.event_date} • ${event.start_time} • ${event.location}</span>
+                                <a href="event-details.html?id=${event.event_id}" class="event-link">
+                                    <strong>${event.title}</strong>
+                                    <span class="muted">${event.event_date} • ${event.start_time} • ${event.location}</span>
+                                </a>
                             </li>
                         `
           )
@@ -75,7 +88,7 @@
     </script>
 
     <footer>
-      <p>; 2026 Webnova. All rights reserved.</p>
+      <p>© 2026 WebNova. All rights reserved.</p>
     </footer>
   </body>
 </html>

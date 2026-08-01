@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../public/css/styles.css" />
+    <link rel="stylesheet" href="../public/css/student.css" />
+    <title>Upcoming Events</title>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="../public/images/logo.webp" alt="Logo" class="logo" />
+        <h1>WebNova</h1>
+      </a>
+    </header>
+
+    <main>
+      <div class="dashboard-shell">
+        <section class="hero-card">
+          <div>
+            <h1>Upcoming Events</h1>
+            <p>Browse the full list of upcoming events.</p>
+          </div>
+        </section>
+
+        <div class="panel">
+          <h3>All Upcoming Events</h3>
+          <ul id="all-upcoming-events-list"></ul>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem">
+          <a href="student-event.html" class="btn btn-outline">Back to Events</a>
+        </div>
+      </div>
+    </main>
+
+    <script src="../public/js/events-data.js"></script>
+    <script>
+      const today = new Date();
+      const upcomingEvents = fakeEvents
+        .filter((event) => new Date(event.event_date) >= today)
+        .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+
+      const listElement = document.getElementById('all-upcoming-events-list');
+
+      listElement.innerHTML = upcomingEvents
+        .map(
+          (event) => `
+            <li class="event-item">
+              <a href="event-details.html?id=${event.event_id}" class="event-link">
+                <strong>${event.title}</strong>
+                <span class="muted">${event.event_date} • ${event.start_time} • ${event.location}</span>
+              </a>
+            </li>
+          `
+        )
+        .join('');
+    </script>
+
+    <footer>
+      <p>© 2026 WebNova. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

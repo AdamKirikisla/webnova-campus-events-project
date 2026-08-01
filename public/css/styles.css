@@ -145,3 +145,10 @@ footer {
   text-decoration: underline;
   color: var(--primary-color);
 }
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.15);
+}

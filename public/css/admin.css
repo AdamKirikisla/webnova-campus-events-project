@@ -61,11 +61,6 @@
   color: #646464;
 }
 
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
 .page {
   display: grid;
   width: 100%;
@@ -186,12 +181,6 @@ a {
   padding-top: 0;
 }
 
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 .cardCreate {
   display: flex;
   flex-direction: column;
@@ -236,12 +225,6 @@ a {
   font-size: 0.95rem;
   background-color: white;
   box-sizing: border-box;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.15);
 }
 
 .submitButton {

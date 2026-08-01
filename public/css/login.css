@@ -91,12 +91,6 @@ body {
   box-sizing: border-box;
 }
 
-.input-group input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-
 .input-row {
   display: flex;
   gap: 12px;

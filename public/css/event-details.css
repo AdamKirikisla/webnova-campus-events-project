@@ -1,0 +1,56 @@
+/* event-details.css */
+
+.details-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  border-radius: 18px;
+  background: var(--background-tint);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Mise en page en 2 colonnes pour les détails */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* La description prend toute la largeur */
+.detail-full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-item {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.detail-item p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Conteneur pour nos boutons dynamiques */
+#dynamic-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+}

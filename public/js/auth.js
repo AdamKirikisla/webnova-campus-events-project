@@ -1,8 +1,9 @@
+// DOM elements selection for authentication forms and toggle buttons
 const toggleLogin = document.getElementById('toggle-login');
 const toggleSignup = document.getElementById('toggle-signup');
 const formLogin = document.getElementById('form-login');
 const formSignup = document.getElementById('form-signup');
-
+// Handle UI transitions between Login and Sign Up views
 toggleSignup.addEventListener('click', () => {
   formLogin.classList.add('hidden');
   formSignup.classList.remove('hidden');
@@ -16,7 +17,7 @@ toggleLogin.addEventListener('click', () => {
   toggleLogin.classList.add('active');
   toggleSignup.classList.remove('active');
 });
-
+// Auto-select Sign Up form if '?mode=signup' is present in the URL
 const urlParams = new URLSearchParams(window.location.search);
 const mode = urlParams.get('mode');
 
@@ -27,7 +28,7 @@ if (mode === 'signup') {
 }
 
 // --- BACKEND SIMULATION ---
-
+// Process user registration, validate duplicates, and store data in localStorage
 const ADMIN_EMAIL = 'admin@live.concordia.ca';
 const ADMIN_PASSWORD = 'admin';
 
@@ -51,12 +52,12 @@ formSignup.addEventListener('submit', (e) => {
     alert('This student ID is already in use.');
     return;
   }
-
+  // Process login attempt and establish basic user session
   const newUser = { email, password, firstName, lastName, studentId, role: 'student', registeredEvents: [] };
   users.push(newUser);
   localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
 
-  alert('Compte créé avec succès ! Tu peux maintenant te connecter.');
+  alert('Account created successfully! You can now log in.');
   toggleLogin.click();
   formSignup.reset();
 });
@@ -66,13 +67,13 @@ formLogin.addEventListener('submit', (e) => {
 
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-
+  // Check for hardcoded admin credentials first
   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
     localStorage.setItem('currentUser', JSON.stringify({ role: 'admin', email: ADMIN_EMAIL }));
     window.location.href = 'admin-dashboard.html';
     return;
   }
-
+  // Verify credentials against the mock database in localStorage
   const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
   const user = users.find((u) => u.email === email && u.password === password);
 
@@ -81,10 +82,11 @@ formLogin.addEventListener('submit', (e) => {
       name: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
       role: user.role ?? 'student',
+      registeredEvents: user.registeredEvents || [],
     };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';
   } else {
-    alert('Courriel ou mot de passe incorrect.');
+    alert('Invalid email or password.');
   }
 });

@@ -234,7 +234,7 @@ for (let btn of editButton) {
       });
 
       if (!isValid) {
-        alert('No feild can be empty or start with a space.');
+        alert('No field can be empty.');
         return;
       }
       // Chronological Validation: Ensure the event's end time is strictly after the start time

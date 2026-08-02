@@ -1,5 +1,4 @@
 const forms = document.querySelector('.forms');
-const input = document.querySelectorAll('.input');
 // Restrict the date input minimum value to today to prevent scheduling events in the past
 const dateInput = document.querySelector('input[name="event_date"]');
 if (dateInput) {

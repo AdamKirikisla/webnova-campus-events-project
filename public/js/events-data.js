@@ -1,7 +1,5 @@
 // Shared fake event data
 // Field names match the "8.2 Events Table" schema from the project requirements
-// Part I: hard-coded data only, no backend/database yet — this array simulates the table
-// Place it before any .js file in your html to make it global, i.e, have access to fakeEvents array
 
 const fakeEvents = [
   {

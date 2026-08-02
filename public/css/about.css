@@ -1,3 +1,4 @@
+/* About page layout: Content spacing and contact form styling */
 .about-main {
   display: flex;
   flex-direction: column;
@@ -7,13 +8,10 @@
 }
 
 .content-card {
-  background-color: var(--background-tint);
+  margin-top: 10vh;
   padding: 3rem;
-  border-radius: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 650px;
-  text-align: center;
+  max-width: 500px;
 }
 
 #contact {
@@ -34,6 +32,7 @@
 }
 
 .contact-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -60,15 +59,4 @@
   border-radius: 0.5rem;
   font-family: inherit;
   background-color: #ffffff;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-
-  box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.2);
 }

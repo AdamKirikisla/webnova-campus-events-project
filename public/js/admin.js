@@ -1,9 +1,10 @@
+// Prevent the Enter key from causing unintended line breaks or form submissions during edits
 function stopEnter(e) {
   if (e.key === 'Enter') e.preventDefault();
 }
 
 const page = document.querySelector('.page');
-
+// Loop through the mock data array to dynamically generate and append event cards to the page
 for (let event of fakeEvents) {
   const card = document.createElement('div');
   card.classList.add('card');
@@ -29,7 +30,7 @@ for (let event of fakeEvents) {
       <button class="delete">Delete</button>
     </div>
   `;*/
-
+  //Here the diff is that div in card-header have row for better styling and the buttons are now styled with btn, btn-outline, and btn-primary classes for consistent appearance.
   card.innerHTML = `
     <div class="card-header">
       <h2>${event.title}</h2>
@@ -46,7 +47,6 @@ for (let event of fakeEvents) {
       <div class="row status"><p>Status</p><p>${event.status}</p></div>
     </div>
     <div class="modifiers">
-      <!-- On injecte tes classes globales pour uniformiser le site -->
       <button class="btn btn-outline edit">Edit</button>
       <button class="btn btn-primary delete">Delete</button>
     </div>
@@ -54,7 +54,7 @@ for (let event of fakeEvents) {
 
   page.append(card);
 }
-
+// Attach click listeners to all delete buttons to permanently remove the selected card from the UI
 const deleteButton = document.querySelectorAll('.delete');
 
 for (let i of deleteButton) {
@@ -104,7 +104,7 @@ for (let i of editButton) {
     }
   });
 }*/
-
+// Utility functions to handle bidirectional conversion between HTML5 input values and human-readable strings
 function toInputDate(dateStr) {
   try {
     const d = new Date(dateStr);
@@ -168,7 +168,7 @@ const editableFields = [
 for (let btn of editButton) {
   btn.addEventListener('click', () => {
     const thisCard = btn.closest('.card');
-
+    // Switch to Edit Mode: Iterate through fields and replace static text with corresponding interactive HTML inputs (select, date, time, text)
     if (btn.textContent === 'Edit') {
       for (let fieldClass of editableFields) {
         const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
@@ -219,6 +219,7 @@ for (let btn of editButton) {
       btn.textContent = 'Save';
       btn.classList.remove('btn-outline');
       btn.classList.add('btn-primary');
+      // Switch to Save Mode: Begin validation phase to ensure no fields are empty
     } else if (btn.textContent === 'Save') {
       let isValid = true;
       const allInputs = thisCard.querySelectorAll('.edit-input');
@@ -236,7 +237,7 @@ for (let btn of editButton) {
         alert('No feild can be empty or start with a space.');
         return;
       }
-
+      // Chronological Validation: Ensure the event's end time is strictly after the start time
       const startInput = thisCard.querySelector('.start_time .edit-input');
       const endInput = thisCard.querySelector('.end_time .edit-input');
 
@@ -246,7 +247,7 @@ for (let btn of editButton) {
         alert("L'heure de fin doit être APRÈS l'heure de début.");
         return;
       }
-
+      // Save Phase: Extract the newly inputted values, format them appropriately, and revert the UI back to static text
       for (let fieldClass of editableFields) {
         const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
         const inputEl = valueContainer.querySelector('.edit-input');

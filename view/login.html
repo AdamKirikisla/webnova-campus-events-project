@@ -10,6 +10,7 @@
     <!-- <script src="../public/js/events-data.js" defer></script> -->
     <script src="../public/js/seed.js" defer></script>
     <script src="../public/js/auth.js" defer></script>
+    <script src="../public/js/main.js" defer></script>
   </head>
   <body>
     <main>
@@ -20,7 +21,6 @@
             <button id="toggle-signup" type="button">Sign Up</button>
           </div>
 
-          <!-- Connexion form -->
           <form id="form-login" class="auth-form hidden">
             <h2>Welcome back</h2>
             <div class="input-group">
@@ -34,17 +34,37 @@
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
 
-          <!-- Sign Up form -->
           <form id="form-signup" class="auth-form hidden">
             <h2>Create a Student Account</h2>
             <div class="input-row">
               <div class="input-group">
                 <label for="signup-firstname">Given Name</label>
-                <input type="text" id="signup-firstname" name="firstname" required placeholder="John" />
+                <input
+                  type="text"
+                  id="signup-firstname"
+                  name="firstname"
+                  required
+                  pattern="(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ\s\-']+"
+                  placeholder="John"
+                  oninvalid="
+                    this.setCustomValidity('Please use only letters, spaces, hyphens, or apostrophes in this field.')
+                  "
+                  oninput="this.setCustomValidity('')"
               </div>
               <div class="input-group">
                 <label for="signup-lastname">Family Name</label>
-                <input type="text" id="signup-lastname" name="lastname" required placeholder="Doe" />
+                <input
+                  type="text"
+                  id="signup-lastname"
+                  name="lastname"
+                  required
+                  pattern="(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ\s\-']+"
+                  placeholder="Doe"
+                  oninvalid="
+                    this.setCustomValidity('Please use only letters, spaces, hyphens, or apostrophes in this field.')
+                  "
+                  oninput="this.setCustomValidity('')"
+                />
               </div>
             </div>
             <div class="input-group">
@@ -64,7 +84,19 @@
             </div>
             <div class="input-group">
               <label for="signup-password">Password</label>
-              <input type="password" id="signup-password" required placeholder="********" />
+              <input
+                type="password"
+                id="signup-password"
+                required
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\S{8,}"
+                oninvalid="
+                  this.setCustomValidity(
+                    'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number. No spaces are allowed.'
+                  )
+                "
+                oninput="this.setCustomValidity('')"
+                placeholder="********"
+              />
             </div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>

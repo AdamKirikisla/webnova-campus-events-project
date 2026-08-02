@@ -111,17 +111,15 @@ body {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
-/* Met les éléments côte à côte */
 .input-row {
   display: flex;
-  gap: 12px; /* L'espace entre les deux champs */
+  gap: 12px;
   margin-bottom: 16px;
 }
 
-/* Assure que chaque champ prend exactement 50% de la largeur */
 .input-row .input-group {
   flex: 1;
-  margin-bottom: 0; /* Enlève la marge du bas puisqu'elle est gérée par la row */
+  margin-bottom: 0;
 }
 
 .btn-primary {

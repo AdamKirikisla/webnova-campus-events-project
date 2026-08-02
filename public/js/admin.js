@@ -234,7 +234,7 @@ for (let btn of editButton) {
       });
 
       if (!isValid) {
-        alert('No feild can be empty or start with a space.');
+        alert('No field can be empty.');
         return;
       }
       // Chronological Validation: Ensure the event's end time is strictly after the start time
@@ -244,7 +244,7 @@ for (let btn of editButton) {
       if (startInput && endInput && startInput.value >= endInput.value) {
         startInput.style.borderColor = 'red';
         endInput.style.borderColor = 'red';
-        alert("L'heure de fin doit être APRÈS l'heure de début.");
+        alert('The end time must be AFTER the start time!');
         return;
       }
       // Save Phase: Extract the newly inputted values, format them appropriately, and revert the UI back to static text

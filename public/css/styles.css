@@ -5,7 +5,7 @@
   margin: 0;
   padding: 0;
 }
-
+/* Global CSS variables defining the WebNova color palette and typography */
 :root {
   --primary-color: #912338;
   --secondary-color: #cbb576;
@@ -41,7 +41,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-family);
 }
-
+/* Reusable UI Components: Standardized button styles and hover effects */
 .btn {
   display: inline-block;
   padding: 0.5rem 1.5rem;
@@ -75,7 +75,7 @@ body {
   background-color: var(--background-tint);
   color: var(--primary-color);
 }
-
+/* Reusable UI Components: Main content card layout */
 .card {
   display: flex;
   flex-direction: column;

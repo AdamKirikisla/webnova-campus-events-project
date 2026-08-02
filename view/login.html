@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../public/css/login.css" />
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <title>WebNova - Login</title>
+    <!-- Core application scripts: Demo data, Auth logic, and Global handlers -->
     <script src="../public/js/seed.js" defer></script>
     <script src="../public/js/auth.js" defer></script>
     <script src="../public/js/main.js" defer></script>
@@ -15,6 +16,7 @@
     <main>
       <div class="auth-wrapper">
         <div class="auth-card">
+          <!-- UI Toggle buttons for switching authentication modes -->
           <div class="auth-header">
             <button id="toggle-login" type="button">Login</button>
             <button id="toggle-signup" type="button">Sign Up</button>
@@ -32,7 +34,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
-
+          <!-- Sign Up form utilizing built-in HTML regex patterns for input validation -->
           <form id="form-signup" class="auth-form hidden">
             <h2>Create a Student Account</h2>
             <div class="input-row">

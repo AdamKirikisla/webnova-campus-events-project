@@ -1,3 +1,4 @@
+// Inject a default demo student into localStorage if no users exist
 const initDemoData = () => {
   const existingUsers = localStorage.getItem('eventPlatformUsers');
 

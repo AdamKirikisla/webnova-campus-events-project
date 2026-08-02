@@ -5,7 +5,7 @@ const initDemoData = () => {
   if (!existingUsers) {
     const demoStudent = {
       email: 'demo@live.concordia.ca',
-      password: 'password123',
+      password: 'Password123',
       firstName: 'Alex',
       lastName: 'Tremblay',
       studentId: '43219876',

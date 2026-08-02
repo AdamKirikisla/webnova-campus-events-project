@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
+    <link rel="stylesheet" href="../public/css/styles.css" />
+    <link rel="stylesheet" href="../public/css/student.css" />
+    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/student-dashboard.js" defer></script>
+    <title>Student Dashboard</title>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="../public/images/logo.webp" alt="Logo" />
+        <h1>WebNova</h1>
+      </a>
+      <nav>
+        <a href="student-event.html" class="btn btn-outline">Events</a>
+        <a href="student-profile.html" class="btn btn-outline">Profile</a>
+        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
+        <a href="my-events.html" class="btn btn-outline">My Events</a>
+        <a href="index.html" class="btn btn-primary">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="dashboard-shell">
+        <section class="hero-card">
+          <div>
+            <h1>Welcome back, Souheil</h1>
+            <p>You have 3 upcoming events and 2 new recommendations this week.</p>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel"></section>
+
+          <section class="panel">
+            <h2>Recommended for you</h2>
+            <div class="event-item">
+              <strong>Study Skills Workshop</strong>
+              <span class="muted">Free session to improve time management.</span>
+            </div>
+            <div class="event-item">
+              <strong>Upcomming events</strong>
+              <span class="muted">Enjoy food, music, and student performances.</span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2026 WebNova. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

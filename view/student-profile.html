@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
+    <link rel="stylesheet" href="../public/css/styles.css" />
+    <link rel="stylesheet" href="../public/css/student.css" />
+    <title>WebNova - Student Profile</title>
+    <style>
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 0.9rem;
+      }
+      .form-group input {
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font: inherit;
+        width: 100%;
+        max-width: 400px;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.15);
+      }
+      .help-text {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 0.2rem;
+      }
+
+      /* Style pour le mode "Lecture" */
+      .profile-info p {
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+      }
+      .profile-info strong {
+        display: inline-block;
+        width: 100px;
+        color: var(--primary-color);
+      }
+
+      /* Classe utilitaire pour cacher le formulaire initialement */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+    <script src="../public/js/student-profile.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="logo-link">
+        <img src="../public/images/logo.webp" alt="Logo" class="logo" />
+        <h1>WebNova</h1>
+      </a>
+      <nav>
+        <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
+        <a href="student-event.html" class="btn btn-outline">Student Events</a>
+        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
+        <a href="my-events.html" class="btn btn-outline">My Events</a>
+        <a href="#" class="btn btn-primary" id="logout-btn">Logout</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="dashboard-shell">
+        <section class="hero-card">
+          <div>
+            <h1>Student Profile</h1>
+            <p>Manage your personal information and credentials.</p>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--primary-color)">Personal Information</h3>
+
+            <!-- MODE LECTURE (Statique) -->
+            <div id="profile-view" class="profile-info">
+              <p>
+                <strong>Name:</strong>
+                <span id="view-name">Loading...</span>
+              </p>
+              <p>
+                <strong>Email:</strong>
+                <span id="view-email">Loading...</span>
+              </p>
+              <p>
+                <strong>Student ID:</strong>
+                <span id="view-id">Loading...</span>
+              </p>
+              <button id="btn-edit" class="btn btn-primary" style="margin-top: 1.5rem; padding: 0.8rem 2rem">
+                Edit Profile
+              </button>
+            </div>
+
+            <!-- MODE ÉDITION (Formulaire) -->
+            <form id="profile-form" class="hidden">
+              <div class="form-group">
+                <label for="profile-firstname">First Name</label>
+                <input type="text" id="profile-firstname" required pattern="(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ\s\-']+" />
+              </div>
+
+              <div class="form-group">
+                <label for="profile-lastname">Last Name</label>
+                <input type="text" id="profile-lastname" required pattern="(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ\s\-']+" />
+              </div>
+
+              <div class="form-group">
+                <label for="profile-email">Email</label>
+                <input type="email" id="profile-email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="profile-id">Student ID</label>
+                <input type="text" id="profile-id" required pattern="[0-9]{8}" title="Must be exactly 8 digits" />
+              </div>
+
+              <div class="form-group">
+                <label for="profile-password">New Password</label>
+                <input
+                  type="password"
+                  id="profile-password"
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\S{8,}"
+                  title="At least 8 characters, 1 uppercase, 1 lowercase, 1 number."
+                />
+                <span class="help-text">Leave blank if you don't want to change it.</span>
+              </div>
+
+              <div class="btn-wrapper" style="display: flex; gap: 1rem; margin-top: 1.5rem">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" id="btn-cancel" class="btn btn-outline">Cancel</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2026 WebNova. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

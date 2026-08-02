@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
-    <link rel="stylesheet" href="../public/css/index.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
     <title>WebNova - Admin Dashboard</title>
   </head>
   <body>
@@ -14,24 +15,57 @@
         <h1>WebNova</h1>
       </a>
       <nav>
-        <a href="admin-dashboard.html">Dashboard</a>
-        <a href="manage-events.html">Manage Events</a>
-        <a href="create-event.html">Create Events</a>
-        <a href="">Logout</a>
+        <a href="manage-events.html" class="btn btn-outline">Manage Events</a>
+        <a href="create-event.html" class="btn btn-outline">Create Events</a>
+        <a href="view-registrations.html" class="btn btn-outline">View Registrations</a>
+        <a href="index.html" class="btn btn-primary">Logout</a>
       </nav>
     </header>
     <main>
-      <div class="card">
-        <h2>Welcome admin</h2>
-        <div class="card-content">
-          <p>Here's what's happening across campus events.</p>
-          <a href="manage-events.html">Manage Events</a>
-          <a href="create-event.html">Create Events</a>
+      <h1 id="dashboardHeader">Admin Dashboard</h1>
+      <p id="dashboardDesc">Overview of campus events, registrations, and attendance.</p>
+
+      <section class="statCards">
+        <div class="statCard">
+          <p class="statTitle">Total Events</p>
+          <p class="statValue" id="statTotalEvents">-</p>
         </div>
-      </div>
+        <div class="statCard">
+          <p class="statTitle">Total Registrations</p>
+          <p class="statValue" id="statTotalRegistrations">-</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Upcoming Events</p>
+          <p class="statValue" id="statUpcomingEvents">-</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Full Capacity</p>
+          <p class="statValue" id="statFullCapacity">-</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Cancelled Events</p>
+          <p class="statValue" id="statCancelledEvents">-</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Most Popular Category</p>
+          <p class="statValue" id="statPopularCategory">-</p>
+        </div>
+      </section>
+
+      <h2>Detailed Statistics</h2>
+      <section class="statBlock" style="width: fit-content">
+        <h3>Percentage of Seats Filled per Event</h3>
+        <p>AI in Industry - Guest Lecture: 100%</p>
+        <p>Resume & Interview Workshop: 95%</p>
+        <p>Fall Coding Club Kickoff: 67%</p>
+      </section>
     </main>
     <footer>
       <p>© 2026 WebNova. All rights reserved.</p>
     </footer>
+
+    <script src="../public/js/events-data.js"></script>
+    <script src="../public/js/seed.js" defer></script>
+    <script src="../public/js/admin-dashboard.js" defer></script>
   </body>
 </html>

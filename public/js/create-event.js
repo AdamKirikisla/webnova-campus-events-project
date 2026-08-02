@@ -1,9 +1,25 @@
 const forms = document.querySelector('.forms');
-const input = document.querySelectorAll('.input');
-
+// Restrict the date input minimum value to today to prevent scheduling events in the past
+const dateInput = document.querySelector('input[name="event_date"]');
+if (dateInput) {
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+}
+// Intercept form submission to handle data validation and dynamic object creation without reloading
 forms.addEventListener('submit', (e) => {
   e.preventDefault();
-
+  // Validate text fields to prevent empty or whitespace-only submissions
+  const descriptionValue = forms.description.value.trim();
+  if (descriptionValue === '') {
+    alert('Description cannot be empty or contain only spaces.');
+    return;
+  }
+  // Chronological Validation: Ensure the event's end time strictly follows the start time
+  if (forms.start_time.value >= forms.end_time.value) {
+    alert('The end time must be AFTER the start time!');
+    return;
+  }
+  // Construct the new event object by mapping form input values to the dataset schema
   const newEvent = {
     event_id: fakeEvents.length + 1,
     title: forms.title.value,
@@ -18,14 +34,11 @@ forms.addEventListener('submit', (e) => {
     organizer_id: forms.organizer_id.value,
     created_on: new Date().toLocaleDateString(),
   };
-
-  fakeEvents.push(newEvent); // adds to the SAME shared array your cards are built from
+  // Append the newly created event object to the mock database array
+  fakeEvents.push(newEvent);
 
   console.log(fakeEvents);
-
-  // ---------------------------------------------------------------------------
-  // 1. BUILD CARDS FROM fakeEvents
-  // ---------------------------------------------------------------------------
+  // Target the preview container and clear any existing elements to prepare for rendering
   const page = document.querySelector('.displayCard');
   page.replaceChildren();
 
@@ -35,7 +48,7 @@ forms.addEventListener('submit', (e) => {
   const createdHeader = document.createElement('p');
   const card = document.createElement('div');
   card.classList.add('cardDisplay');
-
+  // Dynamically generate the HTML structure to display a live preview of the new event card
   card.innerHTML = `
     <h2>${newEventData.title}</h2>
     <div class="card-content">

@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/admin.css" />
     <title>WebNova - Create Event</title>
@@ -14,10 +15,11 @@
         <h1>WebNova</h1>
       </a>
       <nav>
-        <a href="admin-dashboard.html">Dashboard</a>
-        <a href="manage-events.html">Manage Events</a>
-        <a href="create-event.html">Create Events</a>
-        <a href="">Logout</a>
+        <a href="admin-dashboard.html" class="btn btn-outline">Dashboard</a>
+        <a href="manage-events.html" class="btn btn-outline">Manage Events</a>
+        <!-- <a href="create-event.html" class="btn btn-outline">Create Events</a> -->
+        <a href="view-registrations.html" class="btn btn-outline">View Registrations</a>
+        <a href="index.html" class="btn btn-primary">Logout</a>
       </nav>
     </header>
     <main>
@@ -27,11 +29,23 @@
         <form action="" class="forms">
           <label>
             Title
-            <input class="input" type="text" name="title" placeholder="e.g. Fall Career Fair" required />
+            <input
+              class="input"
+              type="text"
+              name="title"
+              pattern="[^\s].*"
+              placeholder="e.g. Fall Career Fair"
+              required
+            />
           </label>
           <label>
             Description
-            <textarea class="input" name="description" placeholder="Brief description of the event" required></textarea>
+            <textarea
+              class="input"
+              name="description"
+              placeholder="Brief description of the event"
+              required
+            ></textarea>
           </label>
           <label>
             Category
@@ -63,7 +77,14 @@
           </label>
           <label>
             Location
-            <input class="input" type="text" name="location" placeholder="e.g. Hall Building, 8th Floor" required />
+            <input
+              class="input"
+              type="text"
+              name="location"
+              pattern="[^\s].*"
+              placeholder="e.g. Hall Building, 8th Floor"
+              required
+            />
           </label>
           <label>
             Capacity
@@ -81,10 +102,17 @@
           </label>
           <label>
             Organizer ID
-            <input class="input" type="text" name="organizer_id" placeholder="e.g. Career Services" required />
+            <input
+              class="input"
+              type="text"
+              name="organizer_id"
+              pattern="[^\s].*"
+              placeholder="e.g. Career Services"
+              required
+            />
           </label>
 
-          <button type="submit" class="submitButton">Create</button>
+          <button type="submit" class="btn btn-primary">Create</button>
         </form>
       </div>
 

@@ -5,7 +5,7 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-
+/* Full-height flexbox wrapper to strictly center the authentication card */
 .auth-wrapper {
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@ body {
 .back-home:hover {
   color: var(--primary-hover);
 }
-
+/* Authentication card styling with fixed dimensions and shadow */
 .auth-card {
   background: var(--background-tint);
   width: 100%;

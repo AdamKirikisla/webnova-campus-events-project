@@ -3,37 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/student.css" />
-    <title>Event Details</title>
-    <style>
-      .details-card {
-        width: 100%;
-        max-width: 800px;
-        padding: 2rem;
-        border-radius: 16px;
-        background: #fff;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      .details-grid {
-        display: grid;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      .detail-item {
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid #eee;
-      }
-
-      .detail-label {
-        font-weight: 700;
-        color: var(--primary-color);
-        display: block;
-        margin-bottom: 0.25rem;
-      }
-    </style>
+    <link rel="stylesheet" href="../public/css/event-details.css" />
+    <title>WebNova - Event Details</title>
+    <!-- Chargement des scripts -->
+    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/event-details.js" defer></script>
   </head>
   <body>
     <header>
@@ -41,78 +18,35 @@
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
         <h1>WebNova</h1>
       </a>
+      <nav>
+        <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
+        <a href="student-profile.html" class="btn btn-outline">Profile</a>
+        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
+        <a href="my-events.html" class="btn btn-outline">My Events</a>
+        <a href="#" class="btn btn-primary" id="logout-btn">Logout</a>
+      </nav>
     </header>
 
     <main>
       <div class="dashboard-shell">
-        <section class="hero-card">
+        <section class="hero-card" style="margin-bottom: 1rem">
           <div>
-            <h1>Event Details</h1>
-            <p>View all information for the selected event.</p>
+            <h1 id="event-title">Loading event...</h1>
+            <p>Review event details and manage your registration.</p>
           </div>
         </section>
 
         <div class="details-card">
-          <h2 id="event-title">Loading event...</h2>
-          <div class="details-grid" id="event-details"></div>
-          <div class="registration-actions" style="margin-top: 1.5rem">
-            <a href="event-registration.html" class="btn btn-primary">Register</a>
-            <a href="student-event.html" class="btn btn-outline">Back to Events</a>
+          <div class="details-grid" id="event-details">
+            <!-- Injecté via JavaScript -->
+          </div>
+
+          <div id="dynamic-actions">
+            <!-- Les boutons S'inscrire/Drop/Attended iront ici -->
           </div>
         </div>
       </div>
     </main>
-
-    <script src="../public/js/events-data.js"></script>
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      const eventId = Number(params.get('id'));
-      const event = fakeEvents.find((item) => item.event_id === eventId);
-
-      const titleElement = document.getElementById('event-title');
-      const detailsElement = document.getElementById('event-details');
-
-      if (!event) {
-        titleElement.textContent = 'Event not found';
-        detailsElement.innerHTML = '<p>Sorry, this event could not be found.</p>';
-      } else {
-        titleElement.textContent = event.title;
-        detailsElement.innerHTML = `
-          <div class="detail-item">
-            <span class="detail-label">Description</span>
-            <p>${event.description}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Category</span>
-            <p>${event.category}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Date</span>
-            <p>${event.event_date}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Time</span>
-            <p>${event.start_time} - ${event.end_time}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Location</span>
-            <p>${event.location}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Capacity</span>
-            <p>${event.capacity}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Status</span>
-            <p>${event.status}</p>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Organizer</span>
-            <p>${event.organizer_id}</p>
-          </div>
-        `;
-      }
-    </script>
 
     <footer>
       <p>© 2026 WebNova. All rights reserved.</p>

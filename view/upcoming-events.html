@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/student.css" />
-    <title>Upcoming Events</title>
+    <title>WebNova - Upcoming Events</title>
+    <!-- Chargement propre des scripts dans le head -->
+    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/upcoming-events.js" defer></script>
   </head>
   <body>
     <header>
@@ -13,6 +17,13 @@
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
         <h1>WebNova</h1>
       </a>
+      <nav>
+        <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
+        <a href="student-profile.html" class="btn btn-outline">Profile</a>
+        <a href="student-event.html" class="btn btn-outline">Student Events</a>
+        <a href="my-events.html" class="btn btn-outline">My Events</a>
+        <a href="#" class="btn btn-primary" id="logout-btn">Logout</a>
+      </nav>
     </header>
 
     <main>
@@ -28,35 +39,8 @@
           <h3>All Upcoming Events</h3>
           <ul id="all-upcoming-events-list"></ul>
         </div>
-
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem">
-          <a href="student-event.html" class="btn btn-outline">Back to Events</a>
-        </div>
       </div>
     </main>
-
-    <script src="../public/js/events-data.js"></script>
-    <script>
-      const today = new Date();
-      const upcomingEvents = fakeEvents
-        .filter((event) => new Date(event.event_date) >= today)
-        .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
-
-      const listElement = document.getElementById('all-upcoming-events-list');
-
-      listElement.innerHTML = upcomingEvents
-        .map(
-          (event) => `
-            <li class="event-item">
-              <a href="event-details.html?id=${event.event_id}" class="event-link">
-                <strong>${event.title}</strong>
-                <span class="muted">${event.event_date} • ${event.start_time} • ${event.location}</span>
-              </a>
-            </li>
-          `
-        )
-        .join('');
-    </script>
 
     <footer>
       <p>© 2026 WebNova. All rights reserved.</p>

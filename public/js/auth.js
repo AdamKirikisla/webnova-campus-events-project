@@ -82,6 +82,7 @@ formLogin.addEventListener('submit', (e) => {
       name: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
       role: user.role ?? 'student',
+      registeredEvents: user.registeredEvents || [],
     };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
     window.location.href = 'student-dashboard.html';

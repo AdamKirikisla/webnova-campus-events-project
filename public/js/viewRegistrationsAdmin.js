@@ -20,6 +20,12 @@ function categoryOf(registry) {
   const event = fakeEvents.find((e) => e.event_id === registry.event_id); // returns the first element in the provided array that satisfies
   return event ? event.category : '';
 }
+// Keeps "Attendance Status" in sync with "Registration Status" automatically
+function attendedFromStatus(status) {
+  if (status === 'attended') return 'attended';
+  if (status === 'missed') return 'missed';
+  return 'Not-yet'; // registered or cancelled -> not decided yet
+}
 
 // read the filters, figure out which registrations match, and rebuild the table
 function renderRows() {
@@ -57,16 +63,23 @@ function renderRows() {
     row.dataset.regId = registry.registration_id;
 
     row.innerHTML = `
-      <td><strong>${registry.user_id}</strong></td>
-      <td class="muted-cell">E${registry.event_id}</td>
-      <td>${registry.event_name}</td>
-      <td>${registry.registration_date}</td>
-      <td>${registry.status}</td>
-      <td>${registry.attended}</td>
-      <td class="modifiers">
-        <button class="btn btn-primary delete">Remove</button>
-      </td>
-    `;
+  <td><strong>${registry.user_id}</strong></td>
+  <td class="muted-cell">E${registry.event_id}</td>
+  <td>${registry.event_name}</td>
+  <td>${registry.registration_date}</td>
+  <td>
+    <select class="status-select" data-role="status">
+      <option value="registered" ${registry.status === 'registered' ? 'selected' : ''}>Registered</option>
+      <option value="attended" ${registry.status === 'attended' ? 'selected' : ''}>Attended</option>
+      <option value="missed" ${registry.status === 'missed' ? 'selected' : ''}>Missed</option>
+      <option value="cancelled" ${registry.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+    </select>
+  </td>
+  <td><span class="status-badge">${registry.attended}</span></td>
+  <td class="modifiers">
+    <button class="btn btn-primary delete">Remove</button>
+  </td>
+`;
 
     tbody.appendChild(row);
   }
@@ -75,6 +88,20 @@ function renderRows() {
 searchInput.addEventListener('input', renderRows);
 eventFilter.addEventListener('change', renderRows);
 statusFilter.addEventListener('change', renderRows);
+
+// When the admin changes Registration Status, update Attendance Status to match
+tbody.addEventListener('change', (e) => {
+  if (e.target.dataset.role !== 'status') return;
+
+  const row = e.target.closest('tr');
+  const regId = Number(row.dataset.regId);
+
+  const registry = fakeRegistrations.find((r) => r.registration_id === regId);
+  registry.status = e.target.value;
+  registry.attended = attendedFromStatus(registry.status);
+
+  renderRows();
+});
 
 // Delete logic
 tbody.addEventListener('click', (e) => {

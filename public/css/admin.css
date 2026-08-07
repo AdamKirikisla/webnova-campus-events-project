@@ -454,3 +454,38 @@ table.reg-table {
   font-size: 0.95rem;
   vertical-align: middle;
 }
+
+/* Registration Status */
+.status-select {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.3rem 1.8rem 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--background-tint);
+  color: #333;
+
+  /* Arrow */
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) center,
+    calc(100% - 9px) center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: #eee;
+  color: #333;
+}

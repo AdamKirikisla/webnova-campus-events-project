@@ -1,3 +1,7 @@
+// coun the registers
+const regCount = document.querySelector('#reg-count');
+let count = 0;
+
 // add data to tbody
 const tbody = document.querySelector('#registrations-tbody');
 
@@ -15,11 +19,12 @@ if (!tbody) {
       <td>${registry.status}</td>
       <td>${registry.attended}</td>
       <td class="modifiers">
-        <button class="btn btn-outline edit">Edit</button>
+
         <button class="btn btn-primary delete">Remove</button>
       </td>
     `;
-
+    count++;
+    regCount.textContent = count;
     tbody.appendChild(row);
   }
 }

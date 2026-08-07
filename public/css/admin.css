@@ -424,3 +424,33 @@
   font-size: 0.95rem;
   align-self: center;
 }
+
+.reg-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+table.reg-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.reg-table thead th {
+  background: var(--background-tint);
+  text-align: left;
+  padding: 0.9rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary-color);
+  white-space: nowrap;
+}
+
+.reg-table tbody td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.95rem;
+  vertical-align: middle;
+}

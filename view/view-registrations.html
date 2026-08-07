@@ -24,6 +24,7 @@
       </nav>
     </header>
     <main>
+      <h1>Event Registrations</h1>
       <section class="reg-filters">
         <div class="filter-field">
           <label for="search-student">Search Student ID</label>
@@ -56,10 +57,22 @@
         <span class="reg-count" id="reg-count">0 registrations</span>
       </section>
 
-      <section class="overview-page">
-        <div class="card">
-          <h2>Work in Progress</h2>
-          <p>Comeback later for new features being implemented.</p>
+
+      <section class="reg-table-wrapper">
+          <table class="reg-table">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Event ID</th>
+                <th>Event Name</th>
+                <th>Registration Date</th>
+                <th>Registration Status</th>
+                <th>Attendance Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="registrations-tbody"></tbody>
+          </table>
         </div>
       </section>
     </main>

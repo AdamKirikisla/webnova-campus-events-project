@@ -16,10 +16,15 @@ if (!tbody) {
       <td>${registry.attended}</td>
       <td class="modifiers">
         <button class="btn btn-outline edit">Edit</button>
-        <button class="btn btn-primary delete">Delete</button>
+        <button class="btn btn-primary delete">Remove</button>
       </td>
     `;
 
     tbody.appendChild(row);
   }
+}
+// Delete button logic
+const deleteButtons = document.querySelectorAll('.delete');
+for (let btn of deleteButtons) {
+  btn.addEventListener('click', () => btn.closest('tr').remove());
 }

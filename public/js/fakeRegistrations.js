@@ -21,7 +21,7 @@ const fakeRegistrations = [
     event_name: 'Fall Career Fair',
     registration_date: '2026-08-20',
     status: 'registered',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 2,
@@ -30,7 +30,7 @@ const fakeRegistrations = [
     event_name: 'Fall Career Fair',
     registration_date: '2026-08-21',
     status: 'registered',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 3,
@@ -39,7 +39,7 @@ const fakeRegistrations = [
     event_name: 'Fall Career Fair',
     registration_date: '2026-08-19',
     status: 'cancelled',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
 
   // Event 2: Intro to Machine Learning Workshop (Aug 3, 2026 - past)
@@ -50,7 +50,7 @@ const fakeRegistrations = [
     event_name: 'Intro to Machine Learning Workshop',
     registration_date: '2026-07-25',
     status: 'attended',
-    attended: 'yes',
+    attended: 'Attended',
   },
   {
     registration_id: 5,
@@ -59,7 +59,7 @@ const fakeRegistrations = [
     event_name: 'Intro to Machine Learning Workshop',
     registration_date: '2026-07-26',
     status: 'missed',
-    attended: 'no',
+    attended: 'Missed',
   },
   {
     registration_id: 6,
@@ -68,7 +68,7 @@ const fakeRegistrations = [
     event_name: 'Intro to Machine Learning Workshop',
     registration_date: '2026-07-27',
     status: 'attended',
-    attended: 'yes',
+    attended: 'Attended',
   },
 
   // Event 3: Chess Club Weekly Meetup (Jul 22, 2026 - past)
@@ -79,7 +79,7 @@ const fakeRegistrations = [
     event_name: 'Chess Club Weekly Meetup',
     registration_date: '2026-07-15',
     status: 'attended',
-    attended: 'yes',
+    attended: 'Attended',
   },
   {
     registration_id: 8,
@@ -88,7 +88,7 @@ const fakeRegistrations = [
     event_name: 'Chess Club Weekly Meetup',
     registration_date: '2026-07-16',
     status: 'registered',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 9,
@@ -97,7 +97,7 @@ const fakeRegistrations = [
     event_name: 'Chess Club Weekly Meetup',
     registration_date: '2026-07-17',
     status: 'missed',
-    attended: 'no',
+    attended: 'Missed',
   },
 
   // Event 4: Varsity Soccer vs Concordia Stingers (Jul 25, 2026 - past)
@@ -108,7 +108,7 @@ const fakeRegistrations = [
     event_name: 'Varsity Soccer vs Concordia Stingers',
     registration_date: '2026-07-18',
     status: 'attended',
-    attended: 'yes',
+    attended: 'Attended',
   },
   {
     registration_id: 11,
@@ -117,7 +117,7 @@ const fakeRegistrations = [
     event_name: 'Varsity Soccer vs Concordia Stingers',
     registration_date: '2026-07-19',
     status: 'missed',
-    attended: 'no',
+    attended: 'Missed',
   },
 
   // Event 5: Guest Lecture: AI Ethics (Aug 10, 2026 - upcoming)
@@ -128,7 +128,7 @@ const fakeRegistrations = [
     event_name: 'Guest Lecture: AI Ethics',
     registration_date: '2026-08-01',
     status: 'registered',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 13,
@@ -137,7 +137,7 @@ const fakeRegistrations = [
     event_name: 'Guest Lecture: AI Ethics',
     registration_date: '2026-08-02',
     status: 'registered',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 14,
@@ -146,7 +146,7 @@ const fakeRegistrations = [
     event_name: 'Guest Lecture: AI Ethics',
     registration_date: '2026-08-03',
     status: 'cancelled',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
 
   // Event 6: Fall Frosh Networking Night (event was cancelled)
@@ -157,7 +157,7 @@ const fakeRegistrations = [
     event_name: 'Fall Frosh Networking Night',
     registration_date: '2026-06-15',
     status: 'cancelled',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
   {
     registration_id: 16,
@@ -166,7 +166,7 @@ const fakeRegistrations = [
     event_name: 'Fall Frosh Networking Night',
     registration_date: '2026-06-16',
     status: 'cancelled',
-    attended: 'not yet',
+    attended: 'Not yet',
   },
 
   // Event 7: Volunteer Day: Campus Cleanup (completed)
@@ -177,7 +177,7 @@ const fakeRegistrations = [
     event_name: 'Volunteer Day: Campus Cleanup',
     registration_date: '2026-07-10',
     status: 'attended',
-    attended: 'yes',
+    attended: 'Attended',
   },
   {
     registration_id: 18,
@@ -186,6 +186,6 @@ const fakeRegistrations = [
     event_name: 'Volunteer Day: Campus Cleanup',
     registration_date: '2026-07-11',
     status: 'missed',
-    attended: 'no',
+    attended: 'Missed',
   },
 ];

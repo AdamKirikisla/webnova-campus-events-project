@@ -310,6 +310,10 @@
   min-height: 4.2em;
 }
 /* View Registrations */
+
+#viewRegistrations {
+  margin-bottom: 2.5rem;
+}
 .reg-filters {
   display: flex;
   align-items: flex-end;

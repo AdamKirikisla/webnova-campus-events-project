@@ -6,6 +6,7 @@
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/overview.css" />
+    <link rel="stylesheet" href="../public/css/admin.css" />
 
     <title>WebNova - View Registrations</title>
   </head>
@@ -23,6 +24,38 @@
       </nav>
     </header>
     <main>
+      <section class="reg-filters">
+        <div class="filter-field">
+          <label for="search-student">Search Student ID</label>
+          <input type="text" id="search-student" placeholder="e.g. S1042" />
+        </div>
+        <div class="filter-field">
+          <label for="event-filter">Event</label>
+          <select id="event-filter">
+            <option value="all">All Events</option>
+            <option value="academic">Academic workshops</option>
+            <option value="career">Career events</option>
+            <option value="club">Club activities</option>
+            <option value="sports">Sports events</option>
+            <option value="volonteering">Volunteering events</option>
+            <option value="social">Social events</option>
+            <option value="guest">Guest lectures</option>
+            <option value="networking">Networking events</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="status-filter">Status</label>
+          <select id="status-filter">
+            <option value="all">All Statuses</option>
+            <option value="registered">Registered</option>
+            <option value="attended">Attended</option>
+            <option value="missed">Missed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <span class="reg-count" id="reg-count">0 registrations</span>
+      </section>
+
       <section class="overview-page">
         <div class="card">
           <h2>Work in Progress</h2>

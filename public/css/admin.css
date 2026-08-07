@@ -384,3 +384,43 @@
     flex-direction: column;
   }
 }
+
+/* View Registrations */
+.reg-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+}
+
+.filter-field input,
+.filter-field select {
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.4rem;
+  border: 1px solid #d1c9c9;
+  font: inherit;
+  background-color: white;
+  min-width: 220px;
+}
+
+.reg-count {
+  margin-left: auto;
+  color: #666;
+  font-size: 0.95rem;
+  align-self: center;
+}

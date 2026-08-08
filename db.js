@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise'); // promise if for async usage
 
 // Connection pool — reuses connections instead of opening a new one per request
 // multiple connections (up to connectionLimit, here 10)
@@ -12,4 +12,4 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-module.exports = pool;
+module.exports = pool; // for export usages

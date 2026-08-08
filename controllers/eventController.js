@@ -76,3 +76,18 @@ async function updateEvent(req, res) {
     res.status(500).json({ error: 'Could not update event.' });
   }
 }
+
+async function deleteEvent(req, res) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid event id.' });
+
+    const [result] = await pool.execute('DELETE FROM Events WHERE event_id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Event not found.' }); // none was deleted
+
+    res.json({ message: 'Event deleted.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Could not delete event.' });
+  }
+}

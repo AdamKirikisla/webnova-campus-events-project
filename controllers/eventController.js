@@ -91,3 +91,6 @@ async function deleteEvent(req, res) {
     res.status(500).json({ error: 'Could not delete event.' });
   }
 }
+
+// For exportation because we use type: commonjs
+module.exports = { getAllEvents, getEventById, createEvent, updateEvent, deleteEvent };

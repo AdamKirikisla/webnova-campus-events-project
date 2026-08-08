@@ -12,4 +12,5 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-module.exports = pool; // for export usages
+// For exportation because we use type: commonjs
+module.exports = pool;

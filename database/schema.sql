@@ -83,7 +83,19 @@ CREATE TABLE Registrations (
 -- SEED DATA (for development and demo)
 -- ============================================================
 
+-- ------------------------------------------------------------
+-- Default test accounts (spec section 13)
+-- Withiyt authentication
+-- ------------------------------------------------------------
+INSERT INTO Users (full_name, email, password_hash, role) VALUES
+('Test Admin', 'admin@test.com', 'adminpassword', 'admin'),
+('Test Student', 'student@test.com', 'studentpassword', 'student');
+
+
+
+
 -- Event categories (spec section 4 — must come from the database in Deliverable 2)
+
 INSERT INTO Categories (category_name, description) VALUES
 ('Academic Workshops', 'Skill-building sessions and academic training.'),
 ('Career Events', 'Career fairs, employer sessions, and job readiness events.'),

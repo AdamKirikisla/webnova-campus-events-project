@@ -24,3 +24,34 @@ async function getEventById(req, res) {
     res.status(500).json({ error: 'Could not fetch event.' });
   }
 }
+
+async function createEvent(req, res) {
+  try {
+    const { title, description, category, event_date, start_time, end_time, location, capacity, organizer_id } =
+      req.body;
+
+    if (!title || title.trim() === '') {
+      return res.status(400).json({ error: 'Event title cannot be empty.' });
+    }
+    if (!event_date || isNaN(Date.parse(event_date))) {
+      return res.status(400).json({ error: 'Event date must be valid.' });
+    }
+    if (new Date(event_date) < new Date().setHours(0, 0, 0, 0)) {
+      return res.status(400).json({ error: 'Event date should not be in the past.' });
+    }
+    if (!capacity || capacity <= 0) {
+      return res.status(400).json({ error: 'Capacity must be a positive number.' });
+    }
+
+    const [result] = await pool.execute(
+      `INSERT INTO Events (title, description, category, event_date, start_time, end_time, location, capacity, organizer_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, category, event_date, start_time, end_time, location, capacity, organizer_id]
+    );
+
+    res.status(201).json({ message: 'Event created.', event_id: result.insertId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Could not create event.' });
+  }
+}

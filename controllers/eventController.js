@@ -55,3 +55,24 @@ async function createEvent(req, res) {
     res.status(500).json({ error: 'Could not create event.' });
   }
 }
+
+async function updateEvent(req, res) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid event id.' });
+
+    const { title, description, category, event_date, start_time, end_time, location, capacity, status } = req.body;
+
+    const [result] = await pool.execute(
+      `UPDATE Events SET title = ?, description = ?, category = ?, event_date = ?, start_time = ?,
+       end_time = ?, location = ?, capacity = ?, status = ? WHERE event_id = ?`,
+      [title, description, category, event_date, start_time, end_time, location, capacity, status, id]
+    );
+
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Event not found.' }); //  records that were actually modified in MySQL
+    res.json({ message: 'Event updated.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Could not update event.' });
+  }
+}

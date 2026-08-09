@@ -9,9 +9,6 @@
 --   4. Paste this entire file and click Go
 -- ============================================================
 
--- Order matters: tables referenced by FOREIGN KEYs must exist first.
--- Events references Users, and Registrations references both Users and Events.
-
 DROP TABLE IF EXISTS Registrations;
 DROP TABLE IF EXISTS Events;
 DROP TABLE IF EXISTS Categories;
@@ -24,8 +21,8 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   full_name VARCHAR(100) NOT NULL,
-  email VARCHAR(150) NOT NULL UNIQUE,   -- UNIQUE prevents duplicate accounts (spec 7.1)
-  password_hash VARCHAR(255) NOT NULL,  -- bcrypt hashes are long; never store plain text
+  email VARCHAR(150) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
   role ENUM('student', 'admin') NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -43,12 +40,13 @@ CREATE TABLE Categories (
 
 -- ------------------------------------------------------------
 -- 8.2 Events Table
+-- category_id is now a real FOREIGN KEY into Categories
 -- ------------------------------------------------------------
 CREATE TABLE Events (
   event_id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(150) NOT NULL,
   description TEXT,
-  category VARCHAR(100),
+  category_id INT,
   event_date DATE NOT NULL,
   start_time TIME,
   end_time TIME,
@@ -57,6 +55,7 @@ CREATE TABLE Events (
   status ENUM('open', 'full', 'cancelled', 'completed', 'disabled') NOT NULL DEFAULT 'open',
   organizer_id INT,
   created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES Categories(category_id),
   FOREIGN KEY (organizer_id) REFERENCES Users(user_id)
 );
 
@@ -64,10 +63,6 @@ CREATE TABLE Events (
 -- ------------------------------------------------------------
 -- 8.3 Registrations Table
 -- ------------------------------------------------------------
--- Note: the spec lists an "attended" field, but it is fully derivable from
--- "status" (attended -> yes, missed -> no, otherwise not yet). Storing both
--- independently allows contradictory rows (e.g. status='cancelled' with
--- attended='yes'), so attendance is computed at query time instead.
 CREATE TABLE Registrations (
   registration_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -80,22 +75,18 @@ CREATE TABLE Registrations (
 
 
 -- ============================================================
--- SEED DATA (for development and demo)
+-- SEED DATA
 -- ============================================================
 
--- ------------------------------------------------------------
--- Default test accounts (spec section 13)
--- Withiyt authentication
--- ------------------------------------------------------------
 INSERT INTO Users (full_name, email, password_hash, role) VALUES
 ('Test Admin', 'admin@test.com', 'adminpassword', 'admin'),
 ('Test Student', 'student@test.com', 'studentpassword', 'student');
 
 
-
-
--- Event categories (spec section 4 — must come from the database in Deliverable 2)
-
+-- Categories inserted first so Events can reference their IDs below.
+-- Insertion order fixes the IDs: 1=Academic Workshops, 2=Career Events,
+-- 3=Club Activities, 4=Sports Events, 5=Cultural Events, 6=Volunteering
+-- Events, 7=Social Events, 8=Guest Lectures, 9=Networking Events, 10=Other.
 INSERT INTO Categories (category_name, description) VALUES
 ('Academic Workshops', 'Skill-building sessions and academic training.'),
 ('Career Events', 'Career fairs, employer sessions, and job readiness events.'),
@@ -109,8 +100,19 @@ INSERT INTO Categories (category_name, description) VALUES
 ('Other', 'Events that do not fit the other categories.');
 
 
--- Sample events
-INSERT INTO Events (title, description, category, event_date, start_time, end_time, location, capacity, status) VALUES
-('Fall Career Fair', 'Meet employers hiring for internships and full-time roles.', 'Career Events', '2026-09-12', '10:00:00', '16:00:00', 'EV Building Atrium', 200, 'open'),
-('Intro to Machine Learning Workshop', 'Hands-on beginner workshop covering ML basics.', 'Academic Workshops', '2026-08-20', '13:00:00', '15:00:00', 'H-937', 50, 'open'),
-('Chess Club Weekly Meetup', 'Casual games and friendly tournaments.', 'Club Activities', '2026-08-15', '17:00:00', '19:00:00', 'Hall Building 7th Floor Lounge', 30, 'open');
+-- Sample events — category_id now points at the Categories rows above
+-- (2 = Career Events, 1 = Academic Workshops, 3 = Club Activities)
+INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status) VALUES
+('Fall Career Fair', 'Meet employers hiring for internships and full-time roles.', 2, '2026-09-12', '10:00:00', '16:00:00', 'EV Building Atrium', 200, 'open'),
+('Intro to Machine Learning Workshop', 'Hands-on beginner workshop covering ML basics.', 1, '2026-08-20', '13:00:00', '15:00:00', 'H-937', 50, 'open'),
+('Chess Club Weekly Meetup', 'Casual games and friendly tournaments.', 3, '2026-08-15', '17:00:00', '19:00:00', 'Hall Building 7th Floor Lounge', 30, 'open');
+
+
+
+
+-- Sample registrations — user_id 2 (Test Student) registering for a few events,
+-- with a mix of statuses so the frontend has real variety to render/test.
+INSERT INTO Registrations (user_id, event_id, status) VALUES
+(2, 1, 'registered'),
+(2, 2, 'registered'),
+(2, 3, 'cancelled');

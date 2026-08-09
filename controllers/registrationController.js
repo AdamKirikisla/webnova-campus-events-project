@@ -1,8 +1,9 @@
 const pool = require('../db');
 
+// For admin
 async function getAllRegistrations(req, res) {
   try {
-    const [rows] = await pool.query(`
+    const [rows] = await pool.execute(`
       SELECT r.*, e.title AS event_title, e.event_date, e.capacity, u.full_name
       FROM Registrations r
      INNER JOIN Events e ON r.event_id = e.event_id

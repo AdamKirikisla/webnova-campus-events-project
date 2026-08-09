@@ -97,3 +97,33 @@ async function createRegistration(req, res) {
     res.status(500).json({ error: 'Could not register for event.' });
   }
 }
+
+// Cancel (student) or mark attended/missed (admin's dropdown on View Registrations).
+async function updateRegistration(req, res) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ error: 'Invalid registration id.' });
+    }
+
+    const { status } = req.body;
+    const validStatuses = ['registered', 'cancelled', 'attended', 'missed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value.' });
+    }
+
+    const [result] = await pool.execute('UPDATE Registrations SET status = ? WHERE registration_id = ?', [status, id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Registration not found.' });
+    }
+
+    res.json({ message: 'Registration updated.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Could not update registration.' });
+  }
+}
+
+// Add to exports:
+module.exports = { getAllRegistrations, getUserRegistrations, createRegistration, updateRegistration };

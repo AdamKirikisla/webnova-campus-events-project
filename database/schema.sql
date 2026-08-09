@@ -109,3 +109,9 @@ INSERT INTO Events (title, description, category_id, event_date, start_time, end
 
 
 
+-- Sample registrations — user_id 2 (Test Student) registering for a few events,
+-- with a mix of statuses so the frontend has real variety to render/test.
+INSERT INTO Registrations (user_id, event_id, status) VALUES
+(2, 1, 'registered'),
+(2, 2, 'registered'),
+(2, 3, 'cancelled');

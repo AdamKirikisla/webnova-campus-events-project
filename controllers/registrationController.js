@@ -1,13 +1,12 @@
 const pool = require('../db');
 
-// For admin
+// For admin, view all registraions
 async function getAllRegistrations(req, res) {
   try {
     const [rows] = await pool.execute(`
-      SELECT r.*, e.title AS event_title, e.event_date, e.capacity, u.full_name
+      SELECT r.*, e.title AS event_title, e.event_date, e.category
       FROM Registrations r
-     INNER JOIN Events e ON r.event_id = e.event_id
-     INNER JOIN Users u ON r.user_id = u.user_id
+      INNER JOIN Events e ON r.event_id = e.event_id
     `);
     res.json(rows);
   } catch (err) {

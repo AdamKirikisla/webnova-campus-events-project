@@ -13,6 +13,10 @@ app.use('/events', eventRoutes);
 const registrationRoutes = require('./routes/registrationRoutes');
 app.use('/registrations', registrationRoutes);
 
+// Categories
+const categoryRoutes = require('./routes/categoryRoutes');
+app.use('/categories', categoryRoutes);
+
 // Display page
 app.use(express.static('view'));
 app.use('/public', express.static('public'));

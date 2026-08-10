@@ -124,8 +124,7 @@ function toDisplayTime(timeStr) {
   }
 }
 
-const editButton = document.querySelectorAll('.edit');
-
+// STEP 3: Edit / Save
 const editableFields = [
   'description',
   'category',
@@ -134,110 +133,147 @@ const editableFields = [
   'end_time',
   'location',
   'capacity',
-  'organizer_id',
   'status',
 ];
 
-for (let btn of editButton) {
-  btn.addEventListener('click', () => {
-    const thisCard = btn.closest('.card');
-    // Switch to Edit Mode: Iterate through fields and replace static text with corresponding interactive HTML inputs (select, date, time, text)
-    if (btn.textContent === 'Edit') {
-      for (let fieldClass of editableFields) {
-        const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
-        const currentValue = valueContainer.textContent.trim();
-        valueContainer.classList.add('editing');
+page.addEventListener('click', async (e) => {
+  if (!e.target.classList.contains('edit')) return;
 
-        let inputHTML = '';
-        if (fieldClass === 'category') {
-          inputHTML = `
-            <select class="input edit-input">
-              <option value="Academic Workshops" ${currentValue === 'Academic Workshops' ? 'selected' : ''}>Academic Workshops</option>
-              <option value="Career Events" ${currentValue === 'Career Events' ? 'selected' : ''}>Career Events</option>
-              <option value="Club Activities" ${currentValue === 'Club Activities' ? 'selected' : ''}>Club Activities</option>
-              <option value="Sports Events" ${currentValue === 'Sports Events' ? 'selected' : ''}>Sports Events</option>
-              <option value="Cultural Events" ${currentValue === 'Cultural Events' ? 'selected' : ''}>Cultural Events</option>
-              <option value="Volunteering Events" ${currentValue === 'Volunteering Events' ? 'selected' : ''}>Volunteering Events</option>
-              <option value="Social Events" ${currentValue === 'Social Events' ? 'selected' : ''}>Social Events</option>
-              <option value="Guest Lectures" ${currentValue === 'Guest Lectures' ? 'selected' : ''}>Guest Lectures</option>
-              <option value="Networking Events" ${currentValue === 'Networking Events' ? 'selected' : ''}>Networking Events</option>
-              <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
-            </select>
-          `;
-        } else if (fieldClass === 'status') {
-          inputHTML = `
-            <select class="input edit-input">
-              <option value="open" ${currentValue === 'open' ? 'selected' : ''}>Open</option>
-              <option value="full" ${currentValue === 'full' ? 'selected' : ''}>Full</option>
-              <option value="cancelled" ${currentValue === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-              <option value="completed" ${currentValue === 'completed' ? 'selected' : ''}>Completed</option>
-              <option value="disabled" ${currentValue === 'disabled' ? 'selected' : ''}>Disabled</option>
-            </select>
-          `;
-        } else if (fieldClass === 'event_date') {
-          const today = new Date().toISOString().split('T')[0];
-          inputHTML = `<input type="date" class="input edit-input" min="${today}" value="${toInputDate(currentValue)}">`;
-        } else if (fieldClass === 'start_time' || fieldClass === 'end_time') {
-          inputHTML = `<input type="time" class="input edit-input" value="${toInputTime(currentValue)}">`;
-        } else if (fieldClass === 'capacity') {
-          inputHTML = `<input type="number" class="input edit-input" min="1" value="${currentValue}">`;
-        } else if (fieldClass === 'description') {
-          inputHTML = `<textarea class="input edit-input" rows="3">${currentValue}</textarea>`;
-        } else {
-          inputHTML = `<input type="text" class="input edit-input" value="${currentValue}">`;
-        }
+  const btn = e.target;
+  const thisCard = btn.closest('.card');
+  const eventId = thisCard.dataset.eventId;
 
-        valueContainer.innerHTML = inputHTML;
+  if (btn.textContent === 'Edit') {
+    for (let fieldClass of editableFields) {
+      const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
+      const currentValue = valueContainer.textContent.trim();
+      valueContainer.classList.add('editing');
+
+      let inputHTML = '';
+      if (fieldClass === 'category') {
+        // NOTE: still using hardcoded category names for now — this gets
+        // fixed to use real category_id values in the next piece.
+        inputHTML = `
+          <select class="input edit-input">
+            <option value="Academic Workshops" ${currentValue === 'Academic Workshops' ? 'selected' : ''}>Academic Workshops</option>
+            <option value="Career Events" ${currentValue === 'Career Events' ? 'selected' : ''}>Career Events</option>
+            <option value="Club Activities" ${currentValue === 'Club Activities' ? 'selected' : ''}>Club Activities</option>
+            <option value="Sports Events" ${currentValue === 'Sports Events' ? 'selected' : ''}>Sports Events</option>
+            <option value="Cultural Events" ${currentValue === 'Cultural Events' ? 'selected' : ''}>Cultural Events</option>
+            <option value="Volunteering Events" ${currentValue === 'Volunteering Events' ? 'selected' : ''}>Volunteering Events</option>
+            <option value="Social Events" ${currentValue === 'Social Events' ? 'selected' : ''}>Social Events</option>
+            <option value="Guest Lectures" ${currentValue === 'Guest Lectures' ? 'selected' : ''}>Guest Lectures</option>
+            <option value="Networking Events" ${currentValue === 'Networking Events' ? 'selected' : ''}>Networking Events</option>
+            <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
+          </select>
+        `;
+      } else if (fieldClass === 'status') {
+        inputHTML = `
+          <select class="input edit-input">
+            <option value="open" ${currentValue === 'open' ? 'selected' : ''}>Open</option>
+            <option value="full" ${currentValue === 'full' ? 'selected' : ''}>Full</option>
+            <option value="cancelled" ${currentValue === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+            <option value="completed" ${currentValue === 'completed' ? 'selected' : ''}>Completed</option>
+            <option value="disabled" ${currentValue === 'disabled' ? 'selected' : ''}>Disabled</option>
+          </select>
+        `;
+      } else if (fieldClass === 'event_date') {
+        const today = new Date().toISOString().split('T')[0];
+        inputHTML = `<input type="date" class="input edit-input" min="${today}" value="${toInputDate(currentValue)}">`;
+      } else if (fieldClass === 'start_time' || fieldClass === 'end_time') {
+        inputHTML = `<input type="time" class="input edit-input" value="${toInputTime(currentValue)}">`;
+      } else if (fieldClass === 'capacity') {
+        inputHTML = `<input type="number" class="input edit-input" min="1" value="${currentValue}">`;
+      } else if (fieldClass === 'description') {
+        inputHTML = `<textarea class="input edit-input" rows="3">${currentValue}</textarea>`;
+      } else {
+        inputHTML = `<input type="text" class="input edit-input" value="${currentValue}">`;
       }
-      btn.textContent = 'Save';
-      btn.classList.remove('btn-outline');
-      btn.classList.add('btn-primary');
-      // Switch to Save Mode: Begin validation phase to ensure no fields are empty
-    } else if (btn.textContent === 'Save') {
-      let isValid = true;
-      const allInputs = thisCard.querySelectorAll('.edit-input');
 
-      allInputs.forEach((input) => {
-        if (input.value.trim() === '') {
-          input.style.borderColor = 'red';
-          isValid = false;
-        } else {
-          input.style.borderColor = 'var(--primary-color)';
-        }
-      });
+      valueContainer.innerHTML = inputHTML;
+    }
+    btn.textContent = 'Save';
+    btn.classList.remove('btn-outline');
+    btn.classList.add('btn-primary');
+    return;
+  }
 
-      if (!isValid) {
-        alert('No field can be empty.');
-        return;
-      }
-      // Chronological Validation: Ensure the event's end time is strictly after the start time
-      const startInput = thisCard.querySelector('.start_time .edit-input');
-      const endInput = thisCard.querySelector('.end_time .edit-input');
+  // --- Save ---
+  let isValid = true;
+  const allInputs = thisCard.querySelectorAll('.edit-input');
 
-      if (startInput && endInput && startInput.value >= endInput.value) {
-        startInput.style.borderColor = 'red';
-        endInput.style.borderColor = 'red';
-        alert('The end time must be AFTER the start time!');
-        return;
-      }
-      // Save Phase: Extract the newly inputted values, format them appropriately, and revert the UI back to static text
-      for (let fieldClass of editableFields) {
-        const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
-        const inputEl = valueContainer.querySelector('.edit-input');
-
-        if (inputEl) {
-          let newValue = inputEl.value;
-          if (inputEl.type === 'date') newValue = toDisplayDate(newValue);
-          if (inputEl.type === 'time') newValue = toDisplayTime(newValue);
-
-          valueContainer.textContent = newValue;
-        }
-
-        valueContainer.classList.remove('editing');
-      }
-      btn.textContent = 'Edit';
-      btn.classList.add('btn-outline');
-      btn.classList.remove('btn-primary');
+  allInputs.forEach((input) => {
+    if (input.value.trim() === '') {
+      input.style.borderColor = 'red';
+      isValid = false;
+    } else {
+      input.style.borderColor = 'var(--primary-color)';
     }
   });
-}
+
+  if (!isValid) {
+    alert('No field can be empty.');
+    return;
+  }
+
+  const startInput = thisCard.querySelector('.start_time .edit-input');
+  const endInput = thisCard.querySelector('.end_time .edit-input');
+
+  if (startInput && endInput && startInput.value >= endInput.value) {
+    startInput.style.borderColor = 'red';
+    endInput.style.borderColor = 'red';
+    alert('The end time must be AFTER the start time!');
+    return;
+  }
+
+  // Build the object the backend's PATCH /events/:id expects.
+  // title isn't an editable field in this UI, so pull its current value
+  // straight from the header. category_id comes from the card's dataset
+  // for now (see note above) — the dropdown itself gets wired up next.
+  const payload = {
+    title: thisCard.querySelector('.card-header h2').textContent.trim(),
+    description: thisCard.querySelector('.description .edit-input').value.trim(),
+    category_id: Number(thisCard.dataset.categoryId),
+    event_date: thisCard.querySelector('.event_date .edit-input').value,
+    start_time: thisCard.querySelector('.start_time .edit-input').value,
+    end_time: thisCard.querySelector('.end_time .edit-input').value,
+    location: thisCard.querySelector('.location .edit-input').value.trim(),
+    capacity: Number(thisCard.querySelector('.capacity .edit-input').value),
+    status: thisCard.querySelector('.status .edit-input').value,
+  };
+
+  try {
+    const response = await fetch(`/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    alert('Could not save changes.');
+    return; // stay in edit mode so nothing is lost
+  }
+
+  // Only revert the fields back to plain text once the save succeeded.
+  for (let fieldClass of editableFields) {
+    const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
+    const inputEl = valueContainer.querySelector('.edit-input');
+
+    if (inputEl) {
+      let newValue = inputEl.value;
+      if (inputEl.type === 'date') newValue = toDisplayDate(newValue);
+      if (inputEl.type === 'time') newValue = toDisplayTime(newValue);
+
+      valueContainer.textContent = newValue;
+    }
+
+    valueContainer.classList.remove('editing');
+  }
+  btn.textContent = 'Edit';
+  btn.classList.add('btn-outline');
+  btn.classList.remove('btn-primary');
+});

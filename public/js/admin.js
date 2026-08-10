@@ -19,7 +19,8 @@ async function loadEvents() {
     for (let event of events) {
       const card = document.createElement('div');
       card.classList.add('card');
-
+      // creates an HTML attribute on that card, e.g.<div class="card" data-event-id="3">
+      card.dataset.eventId = event.event_id;
       card.innerHTML = `
         <div class="card-header">
           <h2>${event.title}</h2>
@@ -53,12 +54,28 @@ async function loadEvents() {
 
 loadEvents();
 
-// Attach click listeners to all delete buttons to permanently remove the selected card from the UI
-const deleteButton = document.querySelectorAll('.delete');
+// STEP 2: Delete button now calls DELETE /events/:id
+page.addEventListener('click', async (e) => {
+  if (!e.target.classList.contains('delete')) return;
 
-for (let i of deleteButton) {
-  i.addEventListener('click', () => i.closest('.card').remove());
-}
+  const card = e.target.closest('.card');
+  const eventId = card.dataset.eventId;
+
+  if (!confirm('Delete this event? This cannot be undone.')) return;
+
+  try {
+    const response = await fetch(`/events/${eventId}`, { method: 'DELETE' });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    card.remove();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    alert('Could not delete event.');
+  }
+});
 
 // Utility functions to handle bidirectional conversion between HTML5 input values and human-readable strings
 function toInputDate(dateStr) {

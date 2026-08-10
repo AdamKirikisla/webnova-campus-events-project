@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-// For admin, view all registraions
+// For admin, view all registrations
 async function getAllRegistrations(req, res) {
   try {
     const [rows] = await pool.execute(`

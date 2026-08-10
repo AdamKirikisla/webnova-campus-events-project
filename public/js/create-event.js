@@ -5,6 +5,28 @@ if (dateInput) {
   const today = new Date().toISOString().split('T')[0];
   dateInput.min = today;
 }
+
+async function loadCategories() {
+  const categorySelect = document.querySelector('select[name="category_id"]');
+  try {
+    const response = await fetch('/categories');
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    const categories = await response.json();
+
+    for (let category of categories) {
+      const option = document.createElement('option');
+      option.value = category.category_id;
+      option.textContent = category.category_name;
+      categorySelect.appendChild(option);
+    }
+  } catch (error) {
+    console.log('Something went wrong:', error);
+  }
+}
+
+loadCategories();
 // Intercept form submission to handle data validation and dynamic object creation without reloading
 forms.addEventListener('submit', (e) => {
   e.preventDefault();

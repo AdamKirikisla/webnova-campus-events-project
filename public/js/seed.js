@@ -8,7 +8,6 @@ const initDemoData = () => {
       password: 'Password123',
       firstName: 'Alex',
       lastName: 'Tremblay',
-      studentId: '43219876',
       role: 'student',
       registeredEvents: [1, 3],
     };

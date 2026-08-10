@@ -5,7 +5,14 @@ const app = express();
 
 app.use(express.json()); // lets Express read JSON request bodies later
 app.use(express.urlencoded({ extended: false })); // lets Express read form data (urlencoded) request bodies later
-
+const session = require('express-session');
+app.use(
+  session({
+    secret: 'super_cle_secrete_webnova', // Dans un vrai projet, ça va dans le .env
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 // Display page
 app.use(express.static('view'));
 app.use('/public', express.static('public'));

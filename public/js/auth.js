@@ -3,6 +3,7 @@ const toggleLogin = document.getElementById('toggle-login');
 const toggleSignup = document.getElementById('toggle-signup');
 const formLogin = document.getElementById('form-login');
 const formSignup = document.getElementById('form-signup');
+
 // Handle UI transitions between Login and Sign Up views
 toggleSignup.addEventListener('click', () => {
   formLogin.classList.add('hidden');
@@ -17,6 +18,7 @@ toggleLogin.addEventListener('click', () => {
   toggleLogin.classList.add('active');
   toggleSignup.classList.remove('active');
 });
+
 // Auto-select Sign Up form if '?mode=signup' is present in the URL
 const urlParams = new URLSearchParams(window.location.search);
 const mode = urlParams.get('mode');
@@ -27,66 +29,71 @@ if (mode === 'signup') {
   toggleLogin.click();
 }
 
-// --- BACKEND SIMULATION ---
-// Process user registration, validate duplicates, and store data in localStorage
-const ADMIN_EMAIL = 'admin@live.concordia.ca';
-const ADMIN_PASSWORD = 'admin';
-
-formSignup.addEventListener('submit', (e) => {
+// 1. GESTION DE L'INSCRIPTION
+formSignup.addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  // On récupère le champ unique (N'oublie pas de changer l'ID dans ton HTML !)
+  const firstName = document.getElementById('signup-firstname').value.trim();
+  const lastName = document.getElementById('signup-lastname').value.trim();
   const email = document.getElementById('signup-email').value;
   const password = document.getElementById('signup-password').value;
-  const firstName = document.getElementById('signup-firstname').value;
-  const lastName = document.getElementById('signup-lastname').value;
-  const studentId = document.getElementById('signup-id').value;
 
-  const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
+  const fullName = `${firstName} ${lastName}`;
 
-  if (users.find((u) => u.email === email)) {
-    alert('This email is already in use.');
-    return;
+  try {
+    // On envoie la requête POST à notre vrai backend Node.js
+    const response = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        full_name: fullName,
+        email: email,
+        password: password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert('Account created successfully! You can now log in.');
+      toggleLogin.click();
+      formSignup.reset();
+    } else {
+      // Si le backend renvoie une erreur (ex: Email déjà utilisé)
+      alert('Error: ' + data.error);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la création du compte :', error);
+    alert('Server error. Please try again later.');
   }
-
-  if (users.find((u) => u.studentId === studentId)) {
-    alert('This student ID is already in use.');
-    return;
-  }
-  // Process login attempt and establish basic user session
-  const newUser = { email, password, firstName, lastName, studentId, role: 'student', registeredEvents: [] };
-  users.push(newUser);
-  localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
-
-  alert('Account created successfully! You can now log in.');
-  toggleLogin.click();
-  formSignup.reset();
 });
 
-formLogin.addEventListener('submit', (e) => {
+// 2. GESTION DE LA CONNEXION
+formLogin.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
-  // Check for hardcoded admin credentials first
-  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-    localStorage.setItem('currentUser', JSON.stringify({ role: 'admin', email: ADMIN_EMAIL }));
-    window.location.href = 'admin-dashboard.html';
-    return;
-  }
-  // Verify credentials against the mock database in localStorage
-  const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
-  const user = users.find((u) => u.email === email && u.password === password);
 
-  if (user) {
-    const sessionUser = {
-      name: `${user.firstName} ${user.lastName}`.trim(),
-      email: user.email,
-      role: user.role ?? 'student',
-      registeredEvents: user.registeredEvents || [],
-    };
-    localStorage.setItem('currentUser', JSON.stringify(sessionUser));
-    window.location.href = 'student-dashboard.html';
-  } else {
-    alert('Invalid email or password.');
+  try {
+    // On envoie les infos au serveur pour vérification
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Magie du serveur : c'est lui qui nous dit vers quelle page aller !
+      window.location.href = data.redirectUrl;
+    } else {
+      alert('Invalid email or password.');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la connexion :', error);
+    alert('Server error. Please try again later.');
   }
 });

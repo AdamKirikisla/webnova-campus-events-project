@@ -3,6 +3,23 @@ function stopEnter(e) {
   if (e.key === 'Enter') e.preventDefault();
 }
 
+// STEP 4: real categories,
+let categories = [];
+
+async function loadCategories() {
+  try {
+    const response = await fetch('/categories');
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    categories = await response.json();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+  }
+}
+
+loadCategories();
+
 const page = document.querySelector('.page');
 
 // STEP 1: fetch real events from the backend instead of looping over fakeEvents
@@ -150,23 +167,17 @@ page.addEventListener('click', async (e) => {
       valueContainer.classList.add('editing');
 
       let inputHTML = '';
+
+      // Real category table
       if (fieldClass === 'category') {
-        // NOTE: still using hardcoded category names for now — this gets
-        // fixed to use real category_id values in the next piece.
-        inputHTML = `
-          <select class="input edit-input">
-            <option value="Academic Workshops" ${currentValue === 'Academic Workshops' ? 'selected' : ''}>Academic Workshops</option>
-            <option value="Career Events" ${currentValue === 'Career Events' ? 'selected' : ''}>Career Events</option>
-            <option value="Club Activities" ${currentValue === 'Club Activities' ? 'selected' : ''}>Club Activities</option>
-            <option value="Sports Events" ${currentValue === 'Sports Events' ? 'selected' : ''}>Sports Events</option>
-            <option value="Cultural Events" ${currentValue === 'Cultural Events' ? 'selected' : ''}>Cultural Events</option>
-            <option value="Volunteering Events" ${currentValue === 'Volunteering Events' ? 'selected' : ''}>Volunteering Events</option>
-            <option value="Social Events" ${currentValue === 'Social Events' ? 'selected' : ''}>Social Events</option>
-            <option value="Guest Lectures" ${currentValue === 'Guest Lectures' ? 'selected' : ''}>Guest Lectures</option>
-            <option value="Networking Events" ${currentValue === 'Networking Events' ? 'selected' : ''}>Networking Events</option>
-            <option value="Other" ${currentValue === 'Other' ? 'selected' : ''}>Other</option>
-          </select>
-        `;
+        const currentCategoryId = Number(thisCard.dataset.categoryId);
+        const optionsHtml = categories
+          .map(
+            (c) =>
+              `<option value="${c.category_id}" ${c.category_id === currentCategoryId ? 'selected' : ''}>${c.category_name}</option>`
+          )
+          .join('');
+        inputHTML = `<select class="input edit-input">${optionsHtml}</select>`;
       } else if (fieldClass === 'status') {
         inputHTML = `
           <select class="input edit-input">
@@ -233,7 +244,7 @@ page.addEventListener('click', async (e) => {
   const payload = {
     title: thisCard.querySelector('.card-header h2').textContent.trim(),
     description: thisCard.querySelector('.description .edit-input').value.trim(),
-    category_id: Number(thisCard.dataset.categoryId),
+    category_id: Number(thisCard.querySelector('.category .edit-input').value),
     event_date: thisCard.querySelector('.event_date .edit-input').value,
     start_time: thisCard.querySelector('.start_time .edit-input').value,
     end_time: thisCard.querySelector('.end_time .edit-input').value,
@@ -258,6 +269,11 @@ page.addEventListener('click', async (e) => {
     return; // stay in edit mode so nothing is lost
   }
 
+  // Save succeeded — keep the card's stored category_id in sync with
+  // whatever the user just picked, so the next time Edit is clicked the
+  // dropdown pre-selects the right option.
+  thisCard.dataset.categoryId = payload.category_id;
+
   // Only revert the fields back to plain text once the save succeeded.
   for (let fieldClass of editableFields) {
     const valueContainer = thisCard.querySelector(`.${fieldClass} p:last-child`);
@@ -267,6 +283,10 @@ page.addEventListener('click', async (e) => {
       let newValue = inputEl.value;
       if (inputEl.type === 'date') newValue = toDisplayDate(newValue);
       if (inputEl.type === 'time') newValue = toDisplayTime(newValue);
+      if (fieldClass === 'category') {
+        const chosen = categories.find((c) => c.category_id === Number(newValue));
+        newValue = chosen ? chosen.category_name : newValue;
+      }
 
       valueContainer.textContent = newValue;
     }

@@ -38,6 +38,7 @@ async function loadEvents() {
       card.classList.add('card');
       // creates an HTML attribute on that card, e.g.<div class="card" data-event-id="3">
       card.dataset.eventId = event.event_id;
+      card.dataset.categoryId = event.category_id;
       card.innerHTML = `
         <div class="card-header">
           <h2>${event.title}</h2>

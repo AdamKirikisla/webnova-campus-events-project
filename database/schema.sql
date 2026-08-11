@@ -79,8 +79,8 @@ CREATE TABLE Registrations (
 -- ============================================================
 
 INSERT INTO Users (full_name, email, password_hash, role) VALUES
-('Test Admin', 'admin@test.com', 'adminpassword', 'admin'),
-('Test Student', 'student@test.com', 'studentpassword', 'student');
+('Test Admin', 'admin@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', 'admin'),
+('Test Student', 'student@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', 'student');
 
 
 -- Categories inserted first so Events can reference their IDs below.

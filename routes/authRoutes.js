@@ -53,6 +53,11 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  // Is the request empty? Are all fields filled?
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Please fill in all fields.' });
+  }
+
   // Check if given email exists in the database, and if so, compare the hashed password
   try {
     const [users] = await pool.execute('SELECT * FROM Users WHERE email = ?', [email]);

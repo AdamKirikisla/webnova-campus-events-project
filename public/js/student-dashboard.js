@@ -1,19 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Retrieve the current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-  // Redirect to login if no active session is found
-  if (!currentUser) {
-    window.location.href = 'login.html';
-    return;
-  }
-
   // 2. Update the Hero Card welcome message
   const welcomeHeader = document.querySelector('.hero-card h1');
-  if (welcomeHeader) {
-    welcomeHeader.textContent = `Welcome back, ${currentUser.name}`;
-  }
-
   // 3. Update the name in the Student Profile panel (3rd panel)
   const panels = document.querySelectorAll('.panel');
 
@@ -23,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     today.setHours(0, 0, 0, 0);
 
     // Get the IDs of events the user is registered for (fallback to empty array if none)
-    const myEventIds = currentUser.registeredEvents || [];
 
     // --- 4. UPCOMING EVENTS PANEL (My registered events) ---
     const upcomingPanel = panels[0];
@@ -91,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn && logoutBtn.textContent === 'Logout') {
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      localStorage.removeItem('currentUser'); // Erase the user session
       window.location.href = 'login.html'; // Redirect to login
     });
   }

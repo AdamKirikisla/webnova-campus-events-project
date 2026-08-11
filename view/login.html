@@ -8,7 +8,6 @@
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <title>WebNova - Login</title>
     <!-- Core application scripts: Demo data, Auth logic, and Global handlers -->
-    <script src="../public/js/seed.js" defer></script>
     <script src="../public/js/auth.js" defer></script>
     <script src="../public/js/main.js" defer></script>
   </head>
@@ -21,7 +20,7 @@
             <button id="toggle-login" type="button">Login</button>
             <button id="toggle-signup" type="button">Sign Up</button>
           </div>
-
+          <!-- Login form -->
           <form id="form-login" class="auth-form hidden">
             <h2>Welcome back</h2>
             <div class="input-group">
@@ -68,17 +67,6 @@
                   oninput="this.setCustomValidity('')"
                 />
               </div>
-            </div>
-            <div class="input-group">
-              <label for="signup-id">Student ID</label>
-              <input
-                type="text"
-                id="signup-id"
-                name="student_id"
-                required
-                pattern="[0-9]{8}"
-                placeholder="8-digit Student ID"
-              />
             </div>
             <div class="input-group">
               <label for="signup-email">Student Email</label>

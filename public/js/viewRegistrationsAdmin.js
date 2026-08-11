@@ -22,6 +22,39 @@ const categoryMap = {
 let registrations = [];
 let categoryNameById = {};
 
+// Is this event's date today or later?
+function isEventFuture(reg) {
+  const eventDate = new Date(reg.event_date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return eventDate >= today;
+}
+
+// What text to show in Attendance Status when it's NOT editable
+function computeAttendance(reg) {
+  if (reg.status === 'cancelled') return 'N/A';
+  if (isEventFuture(reg)) return 'Not yet';
+  if (reg.status === 'attended') return 'Yes';
+  if (reg.status === 'missed') return 'No';
+  return 'Not recorded';
+}
+
+// Decides what goes in the Attendance Status column:
+// - cancelled or future event -> plain text, nothing to mark
+// - past event, still "registered" -> a real dropdown to mark it
+function attendanceCell(reg) {
+  if (reg.status === 'cancelled' || isEventFuture(reg)) {
+    return `<span class="status-badge">${computeAttendance(reg)}</span>`;
+  }
+  return `
+    <select class="status-select" data-role="attendance">
+      <option value="" disabled ${reg.status === 'registered' ? 'selected' : ''}>Select outcome</option>
+      <option value="attended" ${reg.status === 'attended' ? 'selected' : ''}>Attended</option>
+      <option value="missed" ${reg.status === 'missed' ? 'selected' : ''}>Missed</option>
+    </select>
+  `;
+}
+
 // STEP 1: fetch real registrations from the backend
 async function loadRegistrations() {
   try {
@@ -80,6 +113,7 @@ function renderRows() {
 
   for (let reg of filtered) {
     const row = document.createElement('tr');
+    row.dataset.regId = reg.registration_id;
 
     row.innerHTML = `
       <td>${reg.registration_id}</td>
@@ -89,7 +123,7 @@ function renderRows() {
       <td>${reg.event_date}</td>
       <td>${reg.registration_date}</td>
       <td>${reg.status}</td>
-      <td>${reg.status}</td>
+      <td>${attendanceCell(reg)}</td>
       <td></td>
     `;
 
@@ -101,6 +135,34 @@ function renderRows() {
 searchInput.addEventListener('input', renderRows);
 eventFilter.addEventListener('change', renderRows);
 statusFilter.addEventListener('change', renderRows);
+
+// Admin marks attendance — fires only on the dropdown from attendanceCell()
+tbody.addEventListener('change', async (e) => {
+  if (e.target.dataset.role !== 'attendance') return;
+
+  const row = e.target.closest('tr');
+  const regId = row.dataset.regId;
+  const newStatus = e.target.value;
+
+  try {
+    const response = await fetch(`/registrations/${regId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const reg = registrations.find((r) => r.registration_id === Number(regId));
+    reg.status = newStatus;
+    renderRows();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    alert('Could not update attendance.');
+  }
+});
 
 // Load both, then render once both are ready
 async function init() {

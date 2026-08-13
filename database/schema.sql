@@ -130,3 +130,18 @@ INSERT INTO Registrations (user_id, event_id, status) VALUES
 (2, 4, 'registered'),
 (2, 5, 'registered'),
 (2, 6, 'registered');
+
+
+-- One event per category, covering all status/timing combinations:
+-- open/full/cancelled/completed/disabled x past/future
+INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status) VALUES
+('Excel Basics Workshop', 'Open, upcoming — normal case.', 1, '2026-09-01', '13:00:00', '15:00:00', 'H-820', 40, 'open'),
+('Spring Career Expo', 'Full, upcoming — sold out before it happened.', 2, '2026-09-18', '10:00:00', '16:00:00', 'EV Building Atrium', 200, 'full'),
+('Anime Club Movie Night', 'Cancelled, upcoming — was scheduled, then cancelled.', 3, '2026-09-08', '19:00:00', '21:00:00', 'Hall Building 7th Floor Lounge', 30, 'cancelled'),
+('Summer Intramural Finals', 'Completed, past — already happened and wrapped up.', 4, '2026-08-05', '17:00:00', '19:00:00', 'PERFORM Centre', 100, 'completed'),
+('Diwali Celebration', 'Disabled, upcoming — admin took it offline.', 5, '2026-10-15', '18:00:00', '21:00:00', 'Loyola Quad', 150, 'disabled'),
+('Food Bank Volunteer Shift', 'Open, past — event already happened but status was never updated.', 6, '2026-08-01', '10:00:00', '13:00:00', 'Norris Building Plaza', 20, 'open'),
+('Rooftop Summer Social', 'Full, past — was sold out, already happened.', 7, '2026-08-08', '18:00:00', '22:00:00', 'Hall Building Rooftop', 60, 'full'),
+('Guest Talk: Startups 101', 'Cancelled, past — was cancelled before its original date.', 8, '2026-08-06', '14:00:00', '15:30:00', 'H-110', 80, 'cancelled'),
+('Alumni Networking Breakfast', 'Open, upcoming — normal case.', 9, '2026-09-22', '08:00:00', '10:00:00', 'JMSB Atrium', 90, 'open'),
+('Old Art Exhibit', 'Disabled, past — old event admin disabled after it ended.', 10, '2026-07-20', '11:00:00', '17:00:00', 'VA Building Gallery', 50, 'disabled');

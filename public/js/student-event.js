@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listElement.innerHTML = events
         .map(
           (event) => `
-        <li class="event-item" style="list-style: none; padding: 10px; border-bottom: 1px solid #eee;">
+        <li class="event-item" style="list-style: none;">
           <a href="event-details.html?id=${event.event_id}" class="event-link" style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
             <strong style="color: var(--primary-color);">${event.title}</strong>
             <span class="muted" style="font-size: 0.9rem; color: #666;">

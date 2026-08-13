@@ -8,11 +8,66 @@
     <link rel="stylesheet" href="../public/css/student.css" />
     <title>WebNova - Student Profile</title>
     <style>
+      /* Widen the profile panel and drop the dashboard's fixed tile grid,
+         since this page only ever shows a single, larger content card. */
+      .profile-page .dashboard-grid {
+        display: block;
+      }
+
+      .profile-page .panel {
+        width: 100%;
+        max-width: 720px;
+        min-width: 0;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        padding: 2.4rem 2.6rem;
+        background: #fff;
+      }
+
+      .profile-avatar-row {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        margin-bottom: 1.8rem;
+        padding-bottom: 1.8rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .profile-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        flex: 0 0 64px;
+        border-radius: 50%;
+        background: #d9d9d9;
+        color: #8a8a8a;
+        overflow: hidden;
+      }
+
+      .profile-avatar svg {
+        width: 38px;
+        height: 38px;
+      }
+
+      .profile-avatar-row h3 {
+        margin: 0 0 0.2rem;
+        color: var(--primary-color);
+      }
+
+      .profile-avatar-row p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
       .form-group {
         display: flex;
         flex-direction: column;
         gap: 0.4rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.2rem;
       }
       .form-group label {
         font-weight: 700;
@@ -25,7 +80,6 @@
         border-radius: 8px;
         font: inherit;
         width: 100%;
-        max-width: 400px;
       }
       .form-group input:focus {
         outline: none;
@@ -38,15 +92,38 @@
         margin-top: 0.2rem;
       }
 
+      /* Two-column layout for the edit form on wider screens */
+      #profile-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 1.4rem;
+      }
+      .form-group-full {
+        grid-column: 1 / -1;
+      }
+      @media (max-width: 560px) {
+        #profile-form {
+          grid-template-columns: 1fr;
+        }
+      }
+
       /* Style pour le mode "Lecture" */
       .profile-info p {
-        margin-bottom: 0.8rem;
-        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+        padding: 0.9rem 0;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #eee;
+      }
+      .profile-info p:last-of-type {
+        border-bottom: none;
       }
       .profile-info strong {
-        display: inline-block;
-        width: 100px;
         color: var(--primary-color);
+      }
+      .profile-info span {
+        color: #333;
       }
 
       /* Classe utilitaire pour cacher le formulaire initialement */
@@ -54,6 +131,8 @@
         display: none !important;
       }
     </style>
+    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/student-profile.js" defer></script>
   </head>
   <body>
@@ -62,17 +141,29 @@
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
         <h1>WebNova</h1>
       </a>
-      <nav>
+      <nav class="top-nav">
+        <div class="nav-search">
+          <form id="nav-search-form" role="search" autocomplete="off">
+            <input
+              type="search"
+              id="nav-search-input"
+              placeholder="Search events"
+              aria-label="Search events"
+              aria-expanded="false"
+              aria-controls="nav-search-results"
+            />
+          </form>
+          <ul id="nav-search-results" class="nav-search-results" hidden></ul>
+        </div>
         <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
         <a href="student-event.html" class="btn btn-outline">Student Events</a>
-        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
         <a href="my-events.html" class="btn btn-outline">My Events</a>
         <a href="#" class="btn btn-primary" id="logout-btn">Logout</a>
       </nav>
     </header>
 
     <main>
-      <div class="dashboard-shell">
+      <div class="dashboard-shell profile-page">
         <section class="hero-card">
           <div>
             <h1>Student Profile</h1>
@@ -82,7 +173,19 @@
 
         <div class="dashboard-grid">
           <section class="panel">
-            <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--primary-color)">Personal Information</h3>
+            <div class="profile-avatar-row">
+              <div class="profile-avatar" aria-hidden="true">
+                <!-- Generic placeholder avatar (no profile picture system implemented) -->
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8v1H4v-1z" />
+                </svg>
+              </div>
+              <div>
+                <h3>Personal Information</h3>
+                <p>Manage the details tied to your student account.</p>
+              </div>
+            </div>
 
             <!-- MODE LECTURE (Statique) -->
             <div id="profile-view" class="profile-info">
@@ -115,7 +218,7 @@
                 <input type="text" id="profile-lastname" required pattern="(?=.*[a-zA-ZÀ-ÿ])[a-zA-ZÀ-ÿ\s\-']+" />
               </div>
 
-              <div class="form-group">
+              <div class="form-group form-group-full">
                 <label for="profile-email">Email</label>
                 <input type="email" id="profile-email" required />
               </div>
@@ -136,7 +239,7 @@
                 <span class="help-text">Leave blank if you don't want to change it.</span>
               </div>
 
-              <div class="btn-wrapper" style="display: flex; gap: 1rem; margin-top: 1.5rem">
+              <div class="btn-wrapper form-group-full" style="display: flex; gap: 1rem; margin-top: 0.6rem">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
                 <button type="button" id="btn-cancel" class="btn btn-outline">Cancel</button>
               </div>

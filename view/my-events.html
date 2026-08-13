@@ -9,6 +9,7 @@
     <title>WebNova - My Events</title>
     <!-- Les scripts sont maintenant propres et externes -->
     <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/my-events.js" defer></script>
   </head>
   <body>
@@ -17,17 +18,29 @@
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
         <h1>WebNova</h1>
       </a>
-      <nav>
+      <nav class="top-nav">
+        <div class="nav-search">
+          <form id="nav-search-form" role="search" autocomplete="off">
+            <input
+              type="search"
+              id="nav-search-input"
+              placeholder="Search events"
+              aria-label="Search events"
+              aria-expanded="false"
+              aria-controls="nav-search-results"
+            />
+          </form>
+          <ul id="nav-search-results" class="nav-search-results" hidden></ul>
+        </div>
         <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
         <a href="student-profile.html" class="btn btn-outline">Profile</a>
-        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
-        <a href="student-events.html" class="btn btn-outline">Student Events</a>
+        <a href="student-event.html" class="btn btn-outline">Student Events</a>
         <a href="#" class="btn btn-primary" id="logout-btn">Logout</a>
       </nav>
     </header>
 
-    <main>
-      <div class="dashboard-shell">
+    <main class="main-top-align">
+      <div class="dashboard-shell my-events-page">
         <section class="hero-card">
           <div>
             <h1>My Events</h1>
@@ -35,10 +48,26 @@
           </div>
         </section>
 
-        <div class="panel">
-          <h3>Registered Events</h3>
+        <section class="panel agenda-panel">
+          <div class="agenda-header">
+            <h3>Weekly Agenda</h3>
+            <div class="agenda-nav">
+              <button type="button" id="agenda-prev" class="btn btn-outline" aria-label="Previous week">‹</button>
+              <span id="agenda-range" class="agenda-range">Loading…</span>
+              <button type="button" id="agenda-next" class="btn btn-outline" aria-label="Next week">›</button>
+              <button type="button" id="agenda-today" class="btn btn-outline agenda-today-btn">Today</button>
+            </div>
+          </div>
+          <p class="muted agenda-subtitle">
+            Shows only the events you're registered for or have attended, one week at a time.
+          </p>
+          <div class="agenda-grid" id="agenda-grid"></div>
+        </section>
+
+        <section class="panel registered-list-panel">
+          <h3>All Registered Events</h3>
           <ul id="registered-events-list"></ul>
-        </div>
+        </section>
       </div>
     </main>
 

@@ -1,29 +1,28 @@
 const pool = require('../db');
-const { hashPassword, toSessionUser } = require('../utils/users');
+const { hashPassword, toPublicUser } = require('../utils/users');
 
-// GET /users/:id
-async function getUserById(req, res) {
+// These handlers always act on the account in the session, never on an id
+// taken from the URL. That way a student cannot read or edit someone else's
+// profile by changing the number in the address bar.
+
+// GET /users/me
+async function getMyProfile(req, res) {
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid user id.' });
-
-    const [rows] = await pool.execute('SELECT * FROM Users WHERE user_id = ?', [id]);
+    const [rows] = await pool.execute('SELECT * FROM Users WHERE user_id = ?', [req.session.userId]);
     if (rows.length === 0) return res.status(404).json({ error: 'User not found.' });
 
-    res.json(toSessionUser(rows[0]));
+    res.json(toPublicUser(rows[0]));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Could not fetch the user.' });
   }
 }
 
-// PATCH /users/:id  — used by the student profile page.
+// PATCH /users/me  — used by the student profile page.
 // Password is optional: when left blank the existing one is kept.
-async function updateUser(req, res) {
+async function updateMyProfile(req, res) {
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid user id.' });
-
+    const id = req.session.userId;
     const { firstName, lastName, email, studentId, password } = req.body;
 
     if (!firstName || !lastName || !email) {
@@ -49,12 +48,14 @@ async function updateUser(req, res) {
       }
     }
 
+    // The two name fields are stored as a single full_name column.
     const fullName = `${firstName} ${lastName}`.trim();
 
     if (password) {
+      // Hashed with bcrypt, matching the login route's comparison.
       await pool.execute(
         'UPDATE Users SET full_name = ?, email = ?, student_id = ?, password_hash = ? WHERE user_id = ?',
-        [fullName, email, studentId || null, hashPassword(password), id]
+        [fullName, email, studentId || null, await hashPassword(password), id]
       );
     } else {
       await pool.execute('UPDATE Users SET full_name = ?, email = ?, student_id = ? WHERE user_id = ?', [
@@ -65,12 +66,15 @@ async function updateUser(req, res) {
       ]);
     }
 
+    // Keep the session's cached name in step with the change.
+    req.session.fullName = fullName;
+
     const [updated] = await pool.execute('SELECT * FROM Users WHERE user_id = ?', [id]);
-    res.json(toSessionUser(updated[0]));
+    res.json(toPublicUser(updated[0]));
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Could not update the profile.' });
   }
 }
 
-module.exports = { getUserById, updateUser };
+module.exports = { getMyProfile, updateMyProfile };

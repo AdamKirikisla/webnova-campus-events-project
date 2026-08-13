@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Session Management (currentUser now carries the real database user_id)
-  const currentUser = WebNovaAPI.requireLogin();
+  const currentUser = await WebNovaAPI.requireLogin();
   if (!currentUser) return;
 
   const logoutBtn = document.getElementById('logout-btn');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     [event, registrations] = await Promise.all([
       WebNovaAPI.getEvent(eventId),
-      WebNovaAPI.getUserRegistrations(currentUser.user_id),
+      WebNovaAPI.getMyRegistrations(),
     ]);
   } catch (err) {
     console.error(err);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnRegister.addEventListener('click', () =>
         runAction(
           btnRegister,
-          () => WebNovaAPI.registerForEvent(currentUser.user_id, eventId),
+          () => WebNovaAPI.registerForEvent(eventId),
           'Registration successful!'
         )
       );

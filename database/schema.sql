@@ -88,12 +88,12 @@ CREATE TABLE Registrations (
 -- SEED DATA
 -- ============================================================
 
--- Passwords here are plain text for convenience when testing. Accounts created
--- through the signup form are stored salted+hashed (scrypt); the login route
--- accepts both so these demo rows keep working.
+-- Passwords are bcrypt hashes; both demo accounts use "Password123".
+-- student_id is nullable because the signup form does not ask for one:
+-- a student sets it later from their profile page.
 INSERT INTO Users (full_name, email, password_hash, student_id, role) VALUES
-('Test Admin', 'admin@test.com', 'adminpassword', NULL, 'admin'),
-('Test Student', 'student@test.com', 'studentpassword', '40000000', 'student');
+('Test Admin', 'admin@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', NULL, 'admin'),
+('Test Student', 'student@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', '40000000', 'student');
 
 
 -- Categories inserted first so Events can reference their IDs below.

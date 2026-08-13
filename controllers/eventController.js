@@ -51,14 +51,15 @@ async function createEvent(req, res) {
     if (new Date(event_date) < new Date().setHours(0, 0, 0, 0)) {
       return res.status(400).json({ error: 'Event date should not be in the past.' });
     }
-    if (!capacity || capacity <= 0) {
+    const cap = Number(capacity);
+    if (!Number.isFinite(cap) || cap <= 0) {
       return res.status(400).json({ error: 'Capacity must be a positive number.' });
     }
 
     const [result] = await pool.execute(
       `INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, organizer_id)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, category_id, event_date, start_time, end_time, location, capacity, organizer_id]
+      [title, description, category_id, event_date, start_time, end_time, location, cap, organizer_id]
     );
 
     res.status(201).json({ message: 'Event created.', event_id: result.insertId });

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Session Management
-  const currentUser = WebNovaAPI.requireLogin();
+  const currentUser = await WebNovaAPI.requireLogin();
   if (!currentUser) return;
 
   // Handle Logout Logic

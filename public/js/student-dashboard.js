@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Require an active session. currentUser now carries the real user_id
-  //    coming from the Users table, which the registrations endpoint needs.
-  const currentUser = WebNovaAPI.requireLogin();
+  // 1. Require an active session. The server decides who is signed in, so
+  //    this asks it rather than trusting anything stored in the browser.
+  const currentUser = await WebNovaAPI.requireLogin();
   if (!currentUser) return;
 
   // 2. Update the Hero Card welcome message
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const [allEvents, registrations] = await Promise.all([
       WebNovaAPI.getEvents(),
-      WebNovaAPI.getUserRegistrations(currentUser.user_id),
+      WebNovaAPI.getMyRegistrations(),
     ]);
 
     const today = WebNovaAPI.startOfToday();

@@ -1,10 +1,15 @@
 // ===================================================================
-// Shared API client for the WebNova frontend.
+// Shared API client for the WebNova student pages.
 //
 // Every page talks to the Express backend through this file instead of
-// using the hard-coded fakeEvents array. It also normalises the data the
-// database returns into the shape the pages already expect, so the
-// rendering code barely has to change.
+// using a hard-coded events array. It also normalises the data the
+// database returns into the shape the pages expect, so the rendering
+// code stays simple.
+//
+// Authentication is session based (express-session, see routes/authRoutes.js).
+// The browser holds only a session cookie: the signed-in user's id lives on
+// the server, so no page ever sends a user id of its own. That is why the
+// endpoints below are "/mine" style rather than taking an id.
 //
 // The pages MUST be opened through the server (http://localhost:3000/...)
 // and not by double-clicking the .html files, otherwise these relative
@@ -18,6 +23,8 @@ const WebNovaAPI = (() => {
   async function request(path, options = {}) {
     const response = await fetch(path, {
       headers: { 'Content-Type': 'application/json' },
+      // Send the session cookie along with the request.
+      credentials: 'same-origin',
       ...options,
     });
 
@@ -33,7 +40,9 @@ const WebNovaAPI = (() => {
     }
 
     if (!response.ok) {
-      throw new Error((payload && payload.error) || `Request failed (${response.status})`);
+      const error = new Error((payload && payload.error) || `Request failed (${response.status})`);
+      error.status = response.status;
+      throw error;
     }
     return payload;
   }
@@ -52,7 +61,7 @@ const WebNovaAPI = (() => {
     return new Date(year, month - 1, day);
   }
 
-  // Date object -> "Sep 12, 2026" (the format the pages already render)
+  // Date object -> "Sep 12, 2026" (the format the pages render)
   function formatEventDate(dateObj) {
     if (!dateObj) return '';
     return `${MONTHS[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
@@ -107,63 +116,53 @@ const WebNovaAPI = (() => {
   }
 
   // ---------- session helpers ----------
-  // The signed-in user is still kept in localStorage, but it now holds the
-  // real numeric user_id coming from the Users table.
-  function getCurrentUser() {
+
+  // Ask the server who is signed in. Returns null when there is no session.
+  async function getCurrentUser() {
     try {
-      return JSON.parse(localStorage.getItem('currentUser'));
+      return await request('/auth/me');
     } catch (err) {
-      return null;
+      if (err.status === 401) return null;
+      throw err;
     }
   }
 
-  function setCurrentUser(user) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  }
-
-  function logout() {
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
-  }
-
-  // Returns the user, or redirects to the login page and returns null.
-  function requireLogin() {
-    const user = getCurrentUser();
-    if (!user || !user.user_id) {
+  // Page guard: returns the signed-in user, or sends the visitor to the
+  // login page and returns null. Every student page starts with this.
+  async function requireLogin() {
+    const user = await getCurrentUser();
+    if (!user) {
       window.location.href = 'login.html';
       return null;
     }
     return user;
   }
 
-  // ---------- endpoints ----------
-  async function login(email, password) {
-    return request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+  // Ends the session server-side, then follows the redirect it replies with.
+  async function logout() {
+    try {
+      const data = await request('/auth/logout', { method: 'POST' });
+      window.location.href = (data && data.redirectUrl) || 'login.html';
+    } catch (err) {
+      // Even if the call fails, get the user off the page.
+      window.location.href = 'login.html';
+    }
   }
 
-  async function signup(details) {
-    return request('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(details),
-    });
+  // ---------- users ----------
+  async function getMyProfile() {
+    return request('/users/me');
   }
 
-  async function getUser(userId) {
-    return request(`/users/${userId}`);
-  }
-
-  // Returns the updated user, which the caller should write back into the
-  // session so the header/profile reflect the change immediately.
-  async function updateUser(userId, details) {
-    return request(`/users/${userId}`, {
+  // Returns the updated user so the caller can redraw with fresh values.
+  async function updateMyProfile(details) {
+    return request('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(details),
     });
   }
 
+  // ---------- events ----------
   async function getEvents() {
     const rows = await request('/events');
     return rows.map(normaliseEvent);
@@ -177,15 +176,17 @@ const WebNovaAPI = (() => {
     return request('/categories');
   }
 
-  async function getUserRegistrations(userId) {
-    const rows = await request(`/registrations/user/${userId}`);
+  // ---------- registrations ----------
+  async function getMyRegistrations() {
+    const rows = await request('/registrations/mine');
     return rows.map(normaliseRegistration);
   }
 
-  async function registerForEvent(userId, eventId) {
+  // The server takes the student from the session, so only the event is sent.
+  async function registerForEvent(eventId) {
     return request('/registrations', {
       method: 'POST',
-      body: JSON.stringify({ user_id: Number(userId), event_id: Number(eventId) }),
+      body: JSON.stringify({ event_id: Number(eventId) }),
     });
   }
 
@@ -219,20 +220,16 @@ const WebNovaAPI = (() => {
   return {
     // session
     getCurrentUser,
-    setCurrentUser,
-    logout,
     requireLogin,
-    // auth
-    login,
-    signup,
+    logout,
     // users
-    getUser,
-    updateUser,
+    getMyProfile,
+    updateMyProfile,
     // data
     getEvents,
     getEvent,
     getCategories,
-    getUserRegistrations,
+    getMyRegistrations,
     registerForEvent,
     updateRegistration,
     // helpers

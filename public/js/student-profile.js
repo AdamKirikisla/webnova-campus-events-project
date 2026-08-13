@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Verify Active Session (currentUser now carries the real database user_id)
-  const currentUser = WebNovaAPI.requireLogin();
+  const currentUser = await WebNovaAPI.requireLogin();
   if (!currentUser) return;
 
   // Handle Logout
@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnEdit = document.getElementById('btn-edit');
   const btnCancel = document.getElementById('btn-cancel');
 
-  // 3. Fetch the account straight from the database, so the page shows what is
-  //    actually stored rather than whatever the session was created with.
+  // 3. Fetch the account straight from the database. The server resolves which
+  //    account that is from the session, so no id is sent from here.
   let fullUser;
   try {
-    fullUser = await WebNovaAPI.getUser(currentUser.user_id);
+    fullUser = await WebNovaAPI.getMyProfile();
   } catch (err) {
     console.error(err);
     document.getElementById('view-name').textContent = 'Could not load profile.';
@@ -31,9 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnEdit) btnEdit.disabled = true;
     return;
   }
-
-  // Keep the stored session in step with the database.
-  WebNovaAPI.setCurrentUser({ ...currentUser, ...fullUser });
 
   // Fill both the read-only card and the edit form.
   function populate(user) {
@@ -73,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       // The server enforces the duplicate email / student ID rules and
       // only changes the password when a new one was actually typed.
-      const updated = await WebNovaAPI.updateUser(currentUser.user_id, {
+      const updated = await WebNovaAPI.updateMyProfile({
         firstName: document.getElementById('profile-firstname').value.trim(),
         lastName: document.getElementById('profile-lastname').value.trim(),
         email: document.getElementById('profile-email').value.trim(),
@@ -82,7 +79,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       fullUser = updated;
-      WebNovaAPI.setCurrentUser({ ...currentUser, ...updated });
       populate(updated);
 
       profileForm.classList.add('hidden');

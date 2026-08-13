@@ -2,11 +2,11 @@
   "name": "webnova_soen287_teamproject",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -21,11 +21,16 @@
   },
   "homepage": "https://github.com/AccomplishedDish/WebNova_SOEN287_TeamProject#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mysql2": "^3.23.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }

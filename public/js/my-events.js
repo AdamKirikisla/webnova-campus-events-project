@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Session Management (currentUser now holds the real database user_id)
-  const currentUser = WebNovaAPI.requireLogin();
+  const currentUser = await WebNovaAPI.requireLogin();
   if (!currentUser) return;
 
   // Handle Logout Logic
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const listElement = document.getElementById('registered-events-list');
 
-    const allRegistrations = await WebNovaAPI.getUserRegistrations(currentUser.user_id);
+    const allRegistrations = await WebNovaAPI.getMyRegistrations();
 
     // Cancelled registrations are dropped; the rest are sorted chronologically.
     const registeredEvents = allRegistrations

@@ -1,41 +1,26 @@
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 // ------------------------------------------------------------------
-// Shared user helpers, used by authController and userController.
+// Shared user helpers.
 //
-// Passwords use Node's built-in crypto (scrypt), so no extra npm
-// dependency is needed. Stored format is:  scrypt:<salt-hex>:<hash-hex>
+// Password hashing uses bcrypt with the same cost factor as the signup
+// route in routes/authRoutes.js, so a password changed from the profile
+// page stays compatible with the login route.
 // ------------------------------------------------------------------
 
-function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
-  return `scrypt:${salt}:${hash}`;
+const SALT_ROUNDS = 10;
+
+async function hashPassword(password) {
+  return bcrypt.hash(password, SALT_ROUNDS);
 }
 
-function verifyPassword(password, stored) {
-  if (typeof stored !== 'string' || stored.length === 0) return false;
-
-  // The demo rows seeded by schema.sql keep their password in plain text.
-  // Support them so the sample accounts still log in after this change.
-  if (!stored.startsWith('scrypt:')) {
-    return stored === password;
-  }
-
-  const [, salt, originalHash] = stored.split(':');
-  if (!salt || !originalHash) return false;
-
-  const candidate = Buffer.from(crypto.scryptSync(password, salt, 64).toString('hex'), 'hex');
-  const original = Buffer.from(originalHash, 'hex');
-
-  // timingSafeEqual throws if the buffers differ in length
-  if (candidate.length !== original.length) return false;
-  return crypto.timingSafeEqual(candidate, original);
-}
-
-// Shape a Users row into the session object the frontend stores.
+// Shape a Users row into the object the frontend works with.
 // The password hash is never included.
-function toSessionUser(row) {
+//
+// The database stores one full_name, but the profile form edits given and
+// family name separately, so the name is split on the first space here and
+// re-joined when saving.
+function toPublicUser(row) {
   const parts = (row.full_name || '').trim().split(/\s+/);
   return {
     user_id: row.user_id,
@@ -48,4 +33,4 @@ function toSessionUser(row) {
   };
 }
 
-module.exports = { hashPassword, verifyPassword, toSessionUser };
+module.exports = { hashPassword, toPublicUser, SALT_ROUNDS };

@@ -59,6 +59,35 @@ async function loadDashboard() {
 
     const statPopularCategory = document.querySelector('#statPopularCategory');
     statPopularCategory.textContent = popularCategory;
+
+    // STEP 3: Percentage of Seats Filled per Event
+    // Count non-cancelled registrations per event_id, then divide by that
+    // event's capacity.
+    const regCountByEvent = {};
+    for (let reg of registrations) {
+      if (reg.status === 'cancelled') continue;
+      regCountByEvent[reg.event_id] = (regCountByEvent[reg.event_id] || 0) + 1;
+    }
+
+    const statBlockCapacity = document.querySelector('#statBlockCapacity');
+    for (let event of events) {
+      const filledCount = regCountByEvent[event.event_id] || 0;
+      const percentage = event.capacity > 0 ? Math.round((filledCount / event.capacity) * 100) : 0;
+
+      const line = document.createElement('p');
+      line.textContent = `${event.title}: ${percentage}%`;
+      statBlockCapacity.appendChild(line);
+    }
+
+    // STEP 4: Number of Registrations by Category
+    // We already built countByCategory earlier for the popular category
+    // stat — reuse it here instead of recalculating.
+    const statBlockCategory = document.querySelector('#statBlockCategory');
+    for (let categoryName in countByCategory) {
+      const line = document.createElement('p');
+      line.textContent = `${categoryName}: ${countByCategory[categoryName]}`;
+      statBlockCategory.appendChild(line);
+    }
   } catch (error) {
     console.log('Something went wrong:', error);
   }

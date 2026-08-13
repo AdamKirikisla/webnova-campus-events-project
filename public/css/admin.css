@@ -60,7 +60,17 @@
 .statDesc {
   color: #646464;
 }
+.stat-line {
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  color: var(--text-color, #333);
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
 
+.stat-line:last-child {
+  border-bottom: none;
+}
 .page {
   display: grid;
   width: 100%;

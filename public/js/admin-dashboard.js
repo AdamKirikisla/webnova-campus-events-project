@@ -75,16 +75,16 @@ async function loadDashboard() {
       const percentage = event.capacity > 0 ? Math.round((filledCount / event.capacity) * 100) : 0;
 
       const line = document.createElement('p');
+      line.classList.add('stat-line');
       line.textContent = `${event.title}: ${percentage}%`;
       statBlockCapacity.appendChild(line);
     }
 
     // STEP 4: Number of Registrations by Category
-    // We already built countByCategory earlier for the popular category
-    // stat — reuse it here instead of recalculating.
     const statBlockCategory = document.querySelector('#statBlockCategory');
     for (let categoryName in countByCategory) {
       const line = document.createElement('p');
+      line.classList.add('stat-line');
       line.textContent = `${categoryName}: ${countByCategory[categoryName]}`;
       statBlockCategory.appendChild(line);
     }

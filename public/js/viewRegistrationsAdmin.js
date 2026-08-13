@@ -2,6 +2,8 @@ const tbody = document.querySelector('#registrations-tbody');
 const regCount = document.querySelector('#reg-count');
 const searchInput = document.querySelector('#search-student');
 const eventFilter = document.querySelector('#event-filter');
+// NEW: filter by one specific event
+const specificEventFilter = document.querySelector('#specific-event-filter');
 const statusFilter = document.querySelector('#status-filter');
 
 // Maps the filter dropdown's short values to the real category names
@@ -86,10 +88,27 @@ async function loadCategories() {
   }
 }
 
+// filter by one specific event dropdown options.
+function populateSpecificEventFilter() {
+  const eventTitleById = {};
+
+  for (let reg of registrations) {
+    eventTitleById[reg.event_id] = reg.event_title;
+  }
+
+  for (let eventId in eventTitleById) {
+    const option = document.createElement('option');
+    option.value = eventId;
+    option.textContent = eventTitleById[eventId];
+    specificEventFilter.appendChild(option);
+  }
+}
+
 // STEP 2: read the filters, keep only matching rows, render the table
 function renderRows() {
   const searchVal = searchInput.value.trim().toLowerCase();
   const eventVal = eventFilter.value;
+  const specificEventVal = specificEventFilter.value;
   const statusVal = statusFilter.value;
 
   const filtered = registrations.filter((reg) => {
@@ -98,9 +117,11 @@ function renderRows() {
     const categoryName = categoryNameById[reg.category_id] || '';
     const matchesCategory = eventVal === 'all' || categoryName === categoryMap[eventVal];
 
+    const matchesSpecificEvent = specificEventVal === 'all' || Number(reg.event_id) === Number(specificEventVal);
+
     const matchesStatus = statusVal === 'all' || reg.status === statusVal;
 
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesCategory && matchesSpecificEvent && matchesStatus;
   });
 
   regCount.textContent = `${filtered.length} registration${filtered.length === 1 ? '' : 's'}`;
@@ -134,6 +155,7 @@ function renderRows() {
 // whenever the user interacts with one of these controls, run renderRows()
 searchInput.addEventListener('input', renderRows);
 eventFilter.addEventListener('change', renderRows);
+specificEventFilter.addEventListener('change', renderRows);
 statusFilter.addEventListener('change', renderRows);
 
 // Admin marks attendance — fires only on the dropdown from attendanceCell()
@@ -167,6 +189,7 @@ tbody.addEventListener('change', async (e) => {
 // Load both, then render once both are ready
 async function init() {
   await Promise.all([loadRegistrations(), loadCategories()]);
+  populateSpecificEventFilter();
   renderRows();
 }
 

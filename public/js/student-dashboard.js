@@ -1,12 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Retrieve the current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-  // Redirect to login if no active session is found
-  if (!currentUser) {
-    window.location.href = 'login.html';
-    return;
-  }
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Require an active session. currentUser now carries the real user_id
+  //    coming from the Users table, which the registrations endpoint needs.
+  const currentUser = WebNovaAPI.requireLogin();
+  if (!currentUser) return;
 
   // 2. Update the Hero Card welcome message
   const welcomeHeader = document.querySelector('.hero-card p');
@@ -14,22 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
     welcomeHeader.textContent = `Welcome back, ${currentUser.name}`;
   }
 
-  // 3. Update the name in the Student Profile panel (3rd panel)
-  const panels = document.querySelectorAll('.panel');
+  // 3. Load everything this page needs from the backend in one round trip pair.
+  try {
+    const [allEvents, registrations] = await Promise.all([
+      WebNovaAPI.getEvents(),
+      WebNovaAPI.getUserRegistrations(currentUser.user_id),
+    ]);
 
-  // Ensure fakeEvents is loaded from data.js
-  if (typeof fakeEvents !== 'undefined') {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = WebNovaAPI.startOfToday();
 
-    // Get the IDs of events the user is registered for (fallback to empty array if none)
-    const myEventIds = currentUser.registeredEvents || [];
+    // Any registration that was not cancelled counts as one of "my events".
+    const activeRegistrations = registrations.filter((r) => WebNovaAPI.isActive(r));
+    const myEventIds = activeRegistrations.map((r) => r.event_id);
 
     //  4. UPCOMING EVENTS PANEL (My registered events)
     const upcomingPanel = document.querySelector('.panel-upcoming-event');
 
-    // Filter fakeEvents to keep ONLY those the user is registered for, AND that are in the future
-    const myUpcomingEvents = fakeEvents
+    // Registered + still to come, earliest first. slice(0, 1) because this
+    // panel only advertises the single next event, not the whole list.
+    const myUpcomingEvents = allEvents
       .filter((e) => myEventIds.includes(e.event_id))
       .filter((e) => new Date(e.event_date) >= today)
       .sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
@@ -52,13 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //  4a. FAVORITE CATEGORY (category the user has attended the most, shared with the progress panel below)
-    const myAttendedEvents = fakeEvents.filter((e) => myEventIds.includes(e.event_id));
+    // The full event objects behind this student's registrations. Needed
+    // because a registration row only knows the event id, not its category.
+    const myAttendedEvents = allEvents.filter((e) => myEventIds.includes(e.event_id));
 
+    // Tally how many of those events fall into each category, e.g.
+    // { 'Career Events': 2, 'Club Activities': 1 }
     const categoryCounts = {};
     myAttendedEvents.forEach((event) => {
       categoryCounts[event.category] = (categoryCounts[event.category] || 0) + 1;
     });
 
+    // Keep the single highest-counted category. On a tie the first one wins,
+    // since a later category only replaces it on a strictly greater count.
     let favoriteCategory = null;
     let favoriteCount = 0;
     Object.entries(categoryCounts).forEach(([category, count]) => {
@@ -91,11 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
       let progressHtml = '<h2>Participation Progress</h2>';
 
       if (favoriteCategory) {
-        // All events in the favorite category that have already passed, whether attended or not
-        const favoriteCategoryPassed = fakeEvents.filter(
+        // The progress bar answers: "of the events in my favourite category
+        // that have already happened, how many did I actually go to?"
+        // Denominator: every passed event in that category, attended or not.
+        const favoriteCategoryPassed = allEvents.filter(
           (e) => e.category === favoriteCategory && new Date(e.event_date) < today
         ).length;
+        // Numerator: only the ones this student was registered for.
         const favoriteCategoryAttended = pastAttendedEvents.filter((e) => e.category === favoriteCategory).length;
+        // Guard against dividing by zero when no event in that category has passed yet.
         const progressPercent = favoriteCategoryPassed > 0
           ? Math.round((favoriteCategoryAttended / favoriteCategoryPassed) * 100)
           : 0;
@@ -116,18 +125,26 @@ document.addEventListener('DOMContentLoaded', () => {
         progressHtml += '<p class="muted" style="text-align: center;">No favorite category yet.</p>';
       }
 
-      // Calendar-month boundaries
+      // The two bars underneath compare this month against last month.
+      // Day 1 of a month at 00:00 is the boundary between them.
       const startOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
       const thisMonthStart = startOfMonth(today);
+      // Month - 1 is safe in January: the Date constructor rolls back into
+      // December of the previous year on its own.
       const lastMonthStart = new Date(thisMonthStart.getFullYear(), thisMonthStart.getMonth() - 1, 1);
 
+      // Anything on or after the 1st of this month.
       const attendedThisMonth = pastAttendedEvents.filter((e) => new Date(e.event_date) >= thisMonthStart).length;
+      // Anything between the 1st of last month and the 1st of this one.
       const attendedLastMonth = pastAttendedEvents.filter((e) => {
         const d = new Date(e.event_date);
         return d >= lastMonthStart && d < thisMonthStart;
       }).length;
 
+      // Both bars are drawn relative to the busier month, so the larger one
+      // always fills the track. The 1 keeps it from dividing by zero when
+      // neither month has any events.
       const monthMax = Math.max(attendedThisMonth, attendedLastMonth, 1);
       const thisMonthWidth = Math.round((attendedThisMonth / monthMax) * 100);
       const lastMonthWidth = Math.round((attendedLastMonth / monthMax) * 100);
@@ -153,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //  4b. REGISTERED EVENTS PANEL (all events the user signed up for)
     const registeredPanel = document.querySelector('.panel-upcoming-events');
 
-    const myRegisteredEvents = fakeEvents
+    const myRegisteredEvents = allEvents
       .filter((e) => myEventIds.includes(e.event_id))
       .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
@@ -181,11 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. RECOMMENDED FOR YOU PANEL ---
     const recommendPanel = document.querySelector('.panel-recommended');
 
-    // Filter fakeEvents: must be 'open', in the future, and NOT already in the user's registered list
-    const recommendedEvents = fakeEvents
+    // Suggestions the student could still act on, so all three filters matter:
+    // 'open' rules out full/cancelled/completed events, the date rules out ones
+    // that already happened, and the last one avoids recommending something
+    // they are already signed up for. Soonest first, capped at 3 to fit the panel.
+    const recommendedEvents = allEvents
       .filter((e) => e.status === 'open')
       .filter((e) => new Date(e.event_date) >= today)
-      .filter((e) => !myEventIds.includes(e.event_id)) // The magic line that excludes registered events
+      .filter((e) => !myEventIds.includes(e.event_id))
       .sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
       .slice(0, 3);
 
@@ -210,6 +230,20 @@ document.addEventListener('DOMContentLoaded', () => {
         recommendPanel.appendChild(eventDiv);
       });
     }
+
+    // --- 5b. TOTAL EVENTS ATTENDED ---
+    // Was a hard-coded 10 in the HTML; now counted from real registrations.
+    const totalPanel = document.querySelector('.panel-total .big-number');
+    if (totalPanel) {
+      totalPanel.textContent = registrations.filter((r) => WebNovaAPI.isAttended(r, today)).length;
+    }
+  } catch (err) {
+    // A failed load should say so rather than leave the panels on their
+    // placeholder markup, which would look like real (but wrong) data.
+    console.error(err);
+    document.querySelectorAll('.dashboard-grid .panel').forEach((panel) => {
+      panel.innerHTML = `<p class="muted" style="text-align:center;">Could not load data.<br />Is the server running?</p>`;
+    });
   }
 
   // 6. Handle Logout Logic securely
@@ -218,8 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn && logoutBtn.textContent === 'Logout') {
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      localStorage.removeItem('currentUser'); // Erase the user session
-      window.location.href = 'login.html'; // Redirect to login
+      WebNovaAPI.logout();
     });
   }
 });

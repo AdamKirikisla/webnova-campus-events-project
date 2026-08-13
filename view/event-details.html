@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="../public/css/student.css" />
     <link rel="stylesheet" href="../public/css/event-details.css" />
     <title>WebNova - Event Details</title>
-    <!-- Chargement des scripts -->
-    <script src="../public/js/events-data.js" defer></script>
+    <!-- Script loading: api.js must come first, the page script depends on it -->
+    <script src="../public/js/api.js" defer></script>
     <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/event-details.js" defer></script>
   </head>
@@ -51,11 +51,11 @@
 
         <div class="details-card">
           <div class="details-grid" id="event-details">
-            <!-- Injecté via JavaScript -->
+            <!-- Injected by JavaScript (see public/js/event-details.js) -->
           </div>
 
           <div id="dynamic-actions">
-            <!-- Les boutons S'inscrire/Drop/Attended iront ici -->
+            <!-- The Register / Drop / Attended buttons are rendered here -->
           </div>
         </div>
       </div>

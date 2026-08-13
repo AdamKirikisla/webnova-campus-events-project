@@ -107,7 +107,7 @@
         }
       }
 
-      /* Style pour le mode "Lecture" */
+      /* Styling for the read-only view */
       .profile-info p {
         display: flex;
         justify-content: space-between;
@@ -126,12 +126,12 @@
         color: #333;
       }
 
-      /* Classe utilitaire pour cacher le formulaire initialement */
+      /* Utility class used to hide the form until Edit is clicked */
       .hidden {
         display: none !important;
       }
     </style>
-    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/api.js" defer></script>
     <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/student-profile.js" defer></script>
   </head>
@@ -187,7 +187,7 @@
               </div>
             </div>
 
-            <!-- MODE LECTURE (Statique) -->
+            <!-- READ MODE (static view, shown by default) -->
             <div id="profile-view" class="profile-info">
               <p>
                 <strong>Name:</strong>
@@ -206,7 +206,7 @@
               </button>
             </div>
 
-            <!-- MODE ÉDITION (Formulaire) -->
+            <!-- EDIT MODE (form, hidden until "Edit Profile" is clicked) -->
             <form id="profile-form" class="hidden">
               <div class="form-group">
                 <label for="profile-firstname">First Name</label>

@@ -651,32 +651,12 @@ main {
   margin-bottom: 0;
 }
 
-@media (max-width: 900px) {
-  .agenda-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .agenda-day {
-    min-height: auto;
-  }
-
-  .agenda-range {
-    min-width: 0;
-  }
-}
-
-@media (max-width: 700px) {
-  .hero-card {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
 @media (max-width: 1300px) {
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(200px, 1fr));
     grid-template-rows: none;
     grid-auto-rows: auto;
+    grid-auto-flow: row;
   }
 
   .panel {
@@ -691,9 +671,18 @@ main {
     max-height: none;
   }
 
+  .panel-upcoming-event,
+  .panel-recommended,
+  .panel-total,
+  .panel-favorite-category {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .panel-upcoming-events,
   .progress-panel {
     grid-column: 1 / -1;
+    grid-row: auto;
     width: 100%;
     min-width: 0;
     max-width: none;
@@ -708,5 +697,15 @@ main {
 @media (max-width: 700px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+
+  .panel-upcoming-event,
+  .panel-recommended,
+  .panel-total,
+  .panel-favorite-category,
+  .panel-upcoming-events,
+  .progress-panel {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }

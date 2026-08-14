@@ -152,3 +152,50 @@ textarea:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(145, 35, 56, 0.15);
 }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 0.25rem 0.6rem;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  header nav {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  header nav.nav-open {
+    display: flex;
+  }
+
+  header nav .btn {
+    text-align: center;
+  }
+
+  header nav .nav-search {
+    width: 100%;
+  }
+
+  header nav .nav-search input {
+    width: 100%;
+    min-width: 0;
+  }
+}

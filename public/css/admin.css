@@ -453,7 +453,6 @@ table.reg-table {
 
 @media (max-width: 600px) {
   header {
-    flex-direction: column;
     gap: 0.75rem;
     padding: 1rem 0.75rem;
   }

@@ -2,8 +2,7 @@ body {
   background-color: rgb(240, 238, 238);
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 /* Full-height flexbox wrapper to strictly center the authentication card */
 .auth-wrapper {

@@ -10,6 +10,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
+  dateStrings: true, // // return DATE/DATETIME columns as plain strings like
 });
 
 // For exportation because we use type: commonjs

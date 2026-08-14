@@ -1,149 +1,196 @@
-// const regCount = document.querySelector('#reg-count');
-// const tbody = document.querySelector('#registrations-tbody');
-// const searchInput = document.querySelector('#search-student');
-// const eventFilter = document.querySelector('#event-filter');
-// const statusFilter = document.querySelector('#status-filter');
+const tbody = document.querySelector('#registrations-tbody');
+const regCount = document.querySelector('#reg-count');
+const searchInput = document.querySelector('#search-student');
+const eventFilter = document.querySelector('#event-filter');
+// NEW: filter by one specific event
+const specificEventFilter = document.querySelector('#specific-event-filter');
+const statusFilter = document.querySelector('#status-filter');
 
-// const categoryMap = {
-//   academic: 'Academic Workshops',
-//   career: 'Career Events',
-//   club: 'Club Activities',
-//   sports: 'Sports Events',
-//   volonteering: 'Volunteering Events',
-//   social: 'Social Events',
-//   guest: 'Guest Lectures',
-//   networking: 'Networking Events',
-// };
+// Maps the filter dropdown's short values to the real category names
+// stored in the database (e.g. "academic" -> "Academic Workshops")
+const categoryMap = {
+  academic: 'Academic Workshops',
+  career: 'Career Events',
+  club: 'Club Activities',
+  sports: 'Sports Events',
+  cultural: 'Cultural Events',
+  volunteering: 'Volunteering Events',
+  social: 'Social Events',
+  guest: 'Guest Lectures',
+  networking: 'Networking Events',
+  other: 'Other',
+};
 
-// // Finding an event's category from a registration
-// function categoryOf(registry) {
-//   const event = fakeEvents.find((e) => e.event_id === registry.event_id); // returns the first element in the provided array that satisfies
-//   return event ? event.category : '';
-// }
+let registrations = [];
+let categoryNameById = {};
 
-// // Checks if this event's date is today or later
-// function isEventFuture(event) {
-//   const eventDate = new Date(event.event_date);
-//   const today = new Date();
-//   today.setHours(0, 0, 0, 0);
-//   return eventDate >= today;
-// }
+// Is this event's date today or later?
+function isEventFuture(reg) {
+  const eventDate = new Date(reg.event_date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return eventDate >= today;
+}
 
-// // Attendance is never stored — it's always derived from status + event date
-// // Returns the text shown in the "Attendance Status" column
-// function computeAttendance(registry, event) {
-//   if (!event) return 'Unknown';
+// What text to show in Attendance Status when it's NOT editable
+function computeAttendance(reg) {
+  if (reg.status === 'cancelled') return 'N/A';
+  if (isEventFuture(reg)) return 'Not yet';
+  if (reg.status === 'attended') return 'Yes';
+  if (reg.status === 'missed') return 'No';
+  return 'Not recorded';
+}
 
-//   if (registry.status === 'cancelled') return 'N/A'; // withdrew, so attendance never applies
+// Decides what goes in the Attendance Status column:
+// - cancelled or future event -> plain text, nothing to mark
+// - past event, still "registered" -> a real dropdown to mark it
+function attendanceCell(reg) {
+  if (reg.status === 'cancelled' || isEventFuture(reg)) {
+    return `<span class="status-badge">${computeAttendance(reg)}</span>`;
+  }
+  return `
+    <select class="status-select" data-role="attendance">
+      <option value="" disabled ${reg.status === 'registered' ? 'selected' : ''}>Select outcome</option>
+      <option value="attended" ${reg.status === 'attended' ? 'selected' : ''}>Attended</option>
+      <option value="missed" ${reg.status === 'missed' ? 'selected' : ''}>Missed</option>
+    </select>
+  `;
+}
 
-//   if (isEventFuture(event)) return 'Not yet'; // event hasn't happened, impossible to know
+// STEP 1: fetch real registrations from the backend
+async function loadRegistrations() {
+  try {
+    const response = await fetch('/registrations');
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    registrations = await response.json();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    tbody.innerHTML = '<tr><td colspan="9">Could not load registrations.</td></tr>';
+  }
+}
 
-//   if (registry.status === 'attended') return 'Yes';
-//   if (registry.status === 'missed') return 'No';
+// STEP 2: fetch categories so we can match category_id -> category name
+async function loadCategories() {
+  try {
+    const response = await fetch('/categories');
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    const categories = await response.json();
 
-//   return 'Not recorded'; // past event, admin hasn't marked the outcome yet
-// }
+    for (let category of categories) {
+      categoryNameById[category.category_id] = category.category_name;
+    }
+  } catch (error) {
+    console.log('Something went wrong:', error);
+  }
+}
 
-// // Builds what goes inside the "Registration Status" cell
-// // The admin's only job here is marking who showed up, so that's the only thing editable
-// function statusCell(registry, event) {
-//   // Cancelled comes from the student dropping or the event being cancelled — not editable here
-//   if (registry.status === 'cancelled') {
-//     return `<span class="status-badge">Cancelled</span>`;
-//   }
+// filter by one specific event dropdown options.
+function populateSpecificEventFilter() {
+  const eventTitleById = {};
 
-//   // Future event -> nothing to mark yet, read-only
-//   if (!event || isEventFuture(event)) {
-//     return `<span class="status-badge">Registered</span>`;
-//   }
+  for (let reg of registrations) {
+    eventTitleById[reg.event_id] = reg.event_title;
+  }
 
-//   // Past event -> admin marks Attended or Missed
-//   return `
-//     <select class="status-select" data-role="status">
-//       <option value="" disabled ${registry.status === 'registered' ? 'selected' : ''}>Select outcome</option>
-//       <option value="attended" ${registry.status === 'attended' ? 'selected' : ''}>Attended</option>
-//       <option value="missed" ${registry.status === 'missed' ? 'selected' : ''}>Missed</option>
-//     </select>
-//   `;
-// }
+  for (let eventId in eventTitleById) {
+    const option = document.createElement('option');
+    option.value = eventId;
+    option.textContent = eventTitleById[eventId];
+    specificEventFilter.appendChild(option);
+  }
+}
 
-// // read the filters, figure out which registrations match, and rebuild the table
-// function renderRows() {
-//   if (!tbody) {
-//     console.error('Registrations table not found.');
-//     return;
-//   }
+// STEP 2: read the filters, keep only matching rows, render the table
+function renderRows() {
+  const searchVal = searchInput.value.trim().toLowerCase();
+  const eventVal = eventFilter.value;
+  const specificEventVal = specificEventFilter.value;
+  const statusVal = statusFilter.value;
 
-//   const searchVal = searchInput.value.trim().toLowerCase();
-//   const eventVal = eventFilter.value;
-//   const statusVal = statusFilter.value;
+  const filtered = registrations.filter((reg) => {
+    const matchesSearch = !searchVal || String(reg.user_id).toLowerCase().includes(searchVal);
 
-//   // returns new array
-//   const filtered = fakeRegistrations.filter((registry) => {
-//     const matchesSearch = !searchVal || registry.user_id.toLowerCase().includes(searchVal);
-//     const matchesCategory = eventVal === 'all' || categoryOf(registry) === categoryMap[eventVal];
-//     const matchesStatus = statusVal === 'all' || registry.status === statusVal;
-//     return matchesSearch && matchesCategory && matchesStatus;
-//   });
+    const categoryName = categoryNameById[reg.category_id] || '';
+    const matchesCategory = eventVal === 'all' || categoryName === categoryMap[eventVal];
 
-//   regCount.textContent = `${filtered.length} registration${filtered.length === 1 ? '' : 's'}`;
+    const matchesSpecificEvent = specificEventVal === 'all' || Number(reg.event_id) === Number(specificEventVal);
 
-//   tbody.innerHTML = ''; // reset
+    const matchesStatus = statusVal === 'all' || reg.status === statusVal;
 
-//   if (filtered.length === 0) {
-//     tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No registrations match these filters.</td></tr>';
-//     return;
-//   }
+    return matchesSearch && matchesCategory && matchesSpecificEvent && matchesStatus;
+  });
 
-//   for (const registry of filtered) {
-//     const row = document.createElement('tr');
-//     row.dataset.regId = registry.registration_id;
+  regCount.textContent = `${filtered.length} registration${filtered.length === 1 ? '' : 's'}`;
+  tbody.innerHTML = '';
 
-//     const event = fakeEvents.find((e) => e.event_id === registry.event_id); // needed to check future/past
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9">No registrations match these filters.</td></tr>';
+    return;
+  }
 
-//     row.innerHTML = `
-//     <td><strong>${registry.user_id}</strong></td>
-//     <td class="muted-cell">E${registry.event_id}</td>
-//     <td>${registry.event_name}</td>
-//     <td>${registry.registration_date}</td>
-//     <td>${statusCell(registry, event)}</td>
-//     <td><span class="status-badge">${computeAttendance(registry, event)}</span></td>
-//     <td class="modifiers">
-//       <button class="btn btn-primary delete">Remove</button>
-//     </td>
-//   `;
+  for (let reg of filtered) {
+    const row = document.createElement('tr');
+    row.dataset.regId = reg.registration_id;
 
-//     tbody.appendChild(row);
-//   }
-// }
-// // Listening for changes, run renderRows
-// searchInput.addEventListener('input', renderRows);
-// eventFilter.addEventListener('change', renderRows);
-// statusFilter.addEventListener('change', renderRows);
+    row.innerHTML = `
+      <td>${reg.registration_id}</td>
+      <td><strong>${reg.user_id}</strong></td>
+      <td>${reg.event_title}</td>
+      <td>${reg.event_id}</td>
+      <td>${reg.event_date}</td>
+      <td>${reg.registration_date}</td>
+      <td>${reg.status}</td>
+      <td>${attendanceCell(reg)}</td>
+      <td></td>
+    `;
 
-// // Admin marks attendance — only fires on past-event rows, since those are the only ones with a <select>
-// tbody.addEventListener('change', (e) => {
-//   if (e.target.dataset.role !== 'status') return;
+    tbody.appendChild(row);
+  }
+}
 
-//   const row = e.target.closest('tr');
-//   const regId = Number(row.dataset.regId);
+// whenever the user interacts with one of these controls, run renderRows()
+searchInput.addEventListener('input', renderRows);
+eventFilter.addEventListener('change', renderRows);
+specificEventFilter.addEventListener('change', renderRows);
+statusFilter.addEventListener('change', renderRows);
 
-//   const registry = fakeRegistrations.find((r) => r.registration_id === regId);
-//   registry.status = e.target.value; // 'attended' or 'missed' only, that's all the dropdown offers
+// Admin marks attendance — fires only on the dropdown from attendanceCell()
+tbody.addEventListener('change', async (e) => {
+  if (e.target.dataset.role !== 'attendance') return;
 
-//   renderRows(); // attendance column recalculates itself from the new status
-// });
+  const row = e.target.closest('tr');
+  const regId = row.dataset.regId;
+  const newStatus = e.target.value;
 
-// // Delete logic
-// tbody.addEventListener('click', (e) => {
-//   if (!e.target.classList.contains('delete')) return; // element clicked
+  try {
+    const response = await fetch(`/registrations/${regId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
-//   const row = e.target.closest('tr');
-//   const regId = Number(row.dataset.regId);
-//   const index = fakeRegistrations.findIndex((r) => r.registration_id === regId); //search the real data array
-//   if (index !== -1) fakeRegistrations.splice(index, 1); // at position index, remove one element, so itself
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
 
-//   renderRows(); // when clicked again
-// });
+    const reg = registrations.find((r) => r.registration_id === Number(regId));
+    reg.status = newStatus;
+    renderRows();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    alert('Could not update attendance.');
+  }
+});
 
-// renderRows(); // draw the table once when the page first loads
+// Load both, then render once both are ready
+async function init() {
+  await Promise.all([loadRegistrations(), loadCategories()]);
+  populateSpecificEventFilter();
+  renderRows();
+}
+
+init();

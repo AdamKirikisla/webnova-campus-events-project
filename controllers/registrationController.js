@@ -4,9 +4,10 @@ const pool = require('../db');
 async function getAllRegistrations(req, res) {
   try {
     const [rows] = await pool.execute(`
-      SELECT r.*, e.title AS event_title, e.event_date, e.category_id
+      SELECT r.*, e.title AS event_title, e.event_date, e.category_id, u.student_id
       FROM Registrations r
       INNER JOIN Events e ON r.event_id = e.event_id
+      INNER JOIN Users u ON r.user_id = u.user_id
     `);
     res.json(rows);
   } catch (err) {

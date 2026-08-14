@@ -32,13 +32,20 @@ async function updateMyProfile(req, res) {
     const [existingRows] = await pool.execute('SELECT * FROM Users WHERE user_id = ?', [id]);
     if (existingRows.length === 0) return res.status(404).json({ error: 'User not found.' });
 
-    // Email and student ID must stay unique across *other* accounts.
+    // Email must stay unique across *other* accounts.
     const [emailClash] = await pool.execute('SELECT user_id FROM Users WHERE email = ? AND user_id != ?', [email, id]);
     if (emailClash.length > 0) {
       return res.status(409).json({ error: 'This email is already in use by another account.' });
     }
 
+    let newStudentId = existingRows[0].student_id;
+
     if (studentId) {
+      const studentIdRegex = /^\d{8}$/;
+      if (!studentIdRegex.test(studentId)) {
+        return res.status(400).json({ error: 'Student ID must be 8 digits.' });
+      }
+
       const [idClash] = await pool.execute('SELECT user_id FROM Users WHERE student_id = ? AND user_id != ?', [
         studentId,
         id,

@@ -106,13 +106,13 @@ function populateSpecificEventFilter() {
 
 // STEP 2: read the filters, keep only matching rows, render the table
 function renderRows() {
-  const searchVal = searchInput.value.trim().toLowerCase();
+  const searchVal = searchInput.value.trim();
   const eventVal = eventFilter.value;
   const specificEventVal = specificEventFilter.value;
   const statusVal = statusFilter.value;
 
   const filtered = registrations.filter((reg) => {
-    const matchesSearch = !searchVal || String(reg.user_id).toLowerCase().includes(searchVal);
+    const matchesSearch = !searchVal || String(reg.student_id).includes(searchVal);
 
     const categoryName = categoryNameById[reg.category_id] || '';
     const matchesCategory = eventVal === 'all' || categoryName === categoryMap[eventVal];
@@ -138,7 +138,7 @@ function renderRows() {
 
     row.innerHTML = `
       <td>${reg.registration_id}</td>
-      <td><strong>${reg.user_id}</strong></td>
+      <td><strong>${reg.student_id}</strong></td>
       <td>${reg.event_title}</td>
       <td>${reg.event_id}</td>
       <td>${reg.event_date}</td>

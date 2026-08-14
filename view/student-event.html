@@ -1,5 +1,5 @@
 <!---Student Events page,
-Linked to the hard coded data in events-data.js
+Events are loaded from the backend (GET /events) through public/js/api.js
 -->
 
 <!doctype html>
@@ -11,19 +11,33 @@ Linked to the hard coded data in events-data.js
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/student.css" />
     <title>Student Event</title>
-    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/api.js" defer></script>
+    <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/student-event.js" defer></script>
   </head>
+
   <body>
     <header>
       <a href="index.html" class="logo-link">
         <img src="../public/images/logo.webp" alt="Logo" class="logo" />
         <h1>WebNova</h1>
       </a>
-      <nav>
+      <nav class="top-nav">
+        <div class="nav-search">
+          <form id="nav-search-form" role="search" autocomplete="off">
+            <input
+              type="search"
+              id="nav-search-input"
+              placeholder="Search events"
+              aria-label="Search events"
+              aria-expanded="false"
+              aria-controls="nav-search-results"
+            />
+          </form>
+          <ul id="nav-search-results" class="nav-search-results" hidden></ul>
+        </div>
         <a href="student-dashboard.html" class="btn btn-outline">Dashboard</a>
         <a href="student-profile.html" class="btn btn-outline">Profile</a>
-        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
         <a href="my-events.html" class="btn btn-outline">My Events</a>
         <a href="index.html" class="btn btn-primary">Logout</a>
       </nav>
@@ -41,7 +55,6 @@ Linked to the hard coded data in events-data.js
           <div class="card">
             <h3>Upcoming Events</h3>
             <ul id="upcoming-events-list"></ul>
-            <a href="upcoming-events.html" class="btn btn-outline">See more</a>
           </div>
 
           <div class="card">

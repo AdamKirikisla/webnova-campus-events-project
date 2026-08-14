@@ -33,6 +33,10 @@ app.use('/registrations', registrationRoutes);
 const categoryRoutes = require('./routes/categoryRoutes');
 app.use('/categories', categoryRoutes);
 
+// Users (profile read / update)
+const userRoutes = require('./routes/userRoutes');
+app.use('/users', userRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

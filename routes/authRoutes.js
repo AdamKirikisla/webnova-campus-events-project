@@ -2,6 +2,32 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const pool = require('../db.js');
+const { toPublicUser } = require('../utils/users');
+
+// 0. WHO AM I
+// The student pages need to know which account is signed in, but the session
+// lives on the server. This returns the current user (from req.session), so
+// the frontend never has to store or send a user id itself.
+router.get('/me', async (req, res) => {
+  if (!req.session || !req.session.userId) {
+    return res.status(401).json({ error: 'Not logged in.' });
+  }
+
+  try {
+    const [rows] = await pool.execute('SELECT * FROM Users WHERE user_id = ?', [req.session.userId]);
+
+    // The account was deleted while the session was still alive.
+    if (rows.length === 0) {
+      req.session.destroy(() => {});
+      return res.status(401).json({ error: 'Not logged in.' });
+    }
+
+    res.json(toPublicUser(rows[0]));
+  } catch (error) {
+    console.error('Error /auth/me:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // 1. REGISTER
 router.post('/register', async (req, res) => {

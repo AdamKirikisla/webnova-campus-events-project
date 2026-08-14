@@ -3,11 +3,20 @@
 -- SOEN287, Summer 2026 — Deliverable 2
 --
 -- HOW TO USE:
---   1. Open phpMyAdmin (http://localhost/phpmyadmin)
---   2. Create a database named: webnova_db
---   3. Select webnova_db, click the SQL tab
+--   1. Start MySQL from the XAMPP Control Panel
+--   2. Open phpMyAdmin (http://localhost/phpmyadmin)
+--   3. Click the SQL tab at the top
 --   4. Paste this entire file and click Go
+--
+-- The database itself is created below, so there is nothing to
+-- create by hand first. Re-running this file wipes the tables and
+-- reloads the sample data.
 -- ============================================================
+
+-- Create the database (the "webnova_db" named in your .env) and use it
+-- for every statement that follows.
+CREATE DATABASE IF NOT EXISTS webnova_db;
+USE webnova_db;
 
 DROP TABLE IF EXISTS Registrations;
 DROP TABLE IF EXISTS Events;
@@ -23,6 +32,7 @@ CREATE TABLE Users (
   full_name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  student_id VARCHAR(20) UNIQUE,
   role ENUM('student', 'admin') NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -78,9 +88,12 @@ CREATE TABLE Registrations (
 -- SEED DATA
 -- ============================================================
 
-INSERT INTO Users (full_name, email, password_hash, role) VALUES
-('Test Admin', 'admin@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', 'admin'),
-('Test Student', 'student@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', 'student');
+-- Passwords are bcrypt hashes; both demo accounts use "Password123".
+-- student_id is nullable because the signup form does not ask for one:
+-- a student sets it later from their profile page.
+INSERT INTO Users (full_name, email, password_hash, student_id, role) VALUES
+('Test Admin', 'admin@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', NULL, 'admin'),
+('Test Student', 'student@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', '40000000', 'student');
 
 
 -- Categories inserted first so Events can reference their IDs below.

@@ -4,8 +4,96 @@ main {
   padding: 2rem 1.2rem 3rem;
 }
 
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nav-search input {
+  min-width: 220px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 999px;
+  font: inherit;
+  color: var(--primary-color);
+  background: #fff;
+}
+
+.nav-search input::placeholder {
+  color: #8b8b8b;
+}
+
+.nav-search input:focus {
+  outline: 2px solid var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.nav-search {
+  position: relative;
+}
+
+.nav-search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.nav-search-results[hidden] {
+  display: none;
+}
+
+.nav-search-result {
+  display: block;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav-search-result:hover,
+.nav-search-result:focus {
+  background: var(--background-tint2);
+}
+
+.nav-search-result strong {
+  display: block;
+  color: var(--primary-color);
+  font-size: 0.92rem;
+}
+
+.nav-search-result span {
+  display: block;
+  font-size: 0.78rem;
+  color: #666;
+  margin-top: 0.15rem;
+}
+
+.nav-search-result.no-results {
+  cursor: default;
+  color: #888;
+  font-size: 0.85rem;
+  padding: 0.7rem;
+}
+
+.nav-search-result.no-results:hover {
+  background: none;
+}
+
 .dashboard-shell {
-  width: min(1100px, 100%);
+  width: min(1160px, 100%);
   height: 100%;
   margin: 0 auto;
   display: flex;
@@ -13,20 +101,46 @@ main {
   gap: 1rem;
 }
 
+.hero-card {
+  margin: 1rem 0 2rem 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  width: fit-content;
+}
+
 .hero-card div {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  align-items: center;
-  margin-bottom: 2.5rem;
+  align-items: flex-start;
+  text-align: left;
+  width: fit-content;
 }
 
 .panel {
-  background: var(--background-tint);
-  border-radius: 18px;
-  padding: 2rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  min-width: 500px;
+  background: var white;
+  border-radius: 16px;
+  padding: 1.2rem 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  flex: 0 0 220px;
+}
+
+.panel-upcoming-events {
+  width: 420px;
+  min-width: 420px;
+  max-width: 420px;
+  flex: 0 0 420px;
+}
+
+.progress-panel {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  margin-top: 1rem;
 }
 
 .card {
@@ -39,12 +153,30 @@ main {
   font-size: 1.5rem;
 }
 
-.hero-card {
-  margin: 4rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+/* Events page (student-event.html) only: let the Upcoming/Past cards fill the
+   full width of the page instead of the dashboard's fixed 220px tile columns */
+.events-page .dashboard-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+}
+
+.events-page .card {
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.events-page .event-item {
+  background: #fff;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .events-page .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hero-card h1 {
@@ -56,11 +188,157 @@ main {
   color: #666;
 }
 
+:root {
+  --panel-size: 220px;
+  --panel-gap: 1rem;
+  --panel-height: 220px;
+  --tall-panel-width: 420px;
+}
+
 .dashboard-grid {
+  display: grid;
+  grid-template-columns: var(--panel-size) var(--panel-size) var(--panel-size) var(--tall-panel-width);
+  grid-template-rows: var(--panel-height) var(--panel-height);
+  grid-auto-rows: var(--panel-height);
+  gap: var(--panel-gap);
+  grid-auto-flow: dense;
+  align-items: start;
+  justify-content: start;
+}
+
+.panel-small {
+  min-height: var(--panel-height);
+  height: var(--panel-height);
+  max-height: var(--panel-height);
+  overflow-y: auto;
+}
+
+.panel-upcoming-event {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+.panel-recommended {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.panel-total {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.panel-favorite-category {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.panel-upcoming-events {
+  width: 100%;
+  min-width: var(--tall-panel-width);
+  max-width: var(--tall-panel-width);
+  grid-column: 4 / 5;
+  grid-row: 1 / span 2;
+  height: calc(var(--panel-height) * 2 + var(--panel-gap) + var(--panel-height) / 2);
+  overflow-y: auto;
+}
+
+.progress-panel {
+  width: calc(var(--panel-size) * 2 + var(--panel-gap));
+  min-width: calc(var(--panel-size) * 2 + var(--panel-gap));
+  max-width: calc(var(--panel-size) * 2 + var(--panel-gap));
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+  margin-top: 0;
+}
+
+.progress-favorite {
+  margin-bottom: 0.8rem;
+}
+
+.progress-label {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 10rem;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.3rem;
+}
+
+.progress-percent {
+  color: #000;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--background-tint2);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--secondary-color);
+}
+
+.progress-favorite .muted {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  text-align: left;
+}
+
+.period-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.period-bar-row {
+  display: grid;
+  grid-template-columns: 68px 1fr 18px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.period-bar-label {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.period-bar-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--background-tint2);
+  overflow: hidden;
+}
+
+.period-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary-color);
+}
+
+.period-bar-fill-alt {
+  background: var(--secondary-color);
+}
+
+.period-bar-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #000;
+  text-align: right;
+}
+
+.favorite-category-name {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0.7rem 0 0.3rem;
 }
 
 .search-bar-wrapper {
@@ -87,10 +365,18 @@ main {
 .panel h2,
 .panel h3 {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   color: var(--primary-color);
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.panel .big-number {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0.7rem 0;
 }
 
 .event-item {
@@ -104,6 +390,7 @@ main {
 .event-item strong {
   display: block;
   margin-bottom: 0.2rem;
+  font-size: 0.95rem;
 }
 
 .event-link {
@@ -119,7 +406,19 @@ main {
 
 .muted {
   color: #666;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+}
+
+.event-meta {
+  display: block;
+  color: #444;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.event-item .muted {
+  display: block;
+  margin-top: 0.4rem;
 }
 
 .form-group {
@@ -153,6 +452,215 @@ main {
   font-size: 0.8rem;
   color: #666;
   margin-top: 0.2rem;
+}
+
+/* This page's content (calendar + full list) runs much taller than the
+   viewport. main's default display:flex + justify-content:center +
+   .dashboard-shell's height:100% are all built around short, viewport-sized
+   pages; on a tall page those two combine to vertically center (and overflow)
+   the shell instead of just stacking it, which is what collided the bottom
+   content with the footer. Take main out of flex layout entirely here so
+   there's no centering/percentage-height math left to fight. */
+.main-top-align {
+  display: block;
+}
+
+.main-top-align .my-events-page {
+  height: auto;
+  margin: 0 auto;
+}
+
+/* My Events page: weekly agenda calendar + full registered-events list.
+   Drop the dashboard's fixed 220px tile sizing so both panels can breathe.
+
+   `flex: none` is the load-bearing line. On the other pages the panels sit
+   inside .dashboard-grid (a grid container, where `flex` is inert), but here
+   they are direct children of .dashboard-shell, which is a COLUMN flex
+   container - so the base rule's `flex: 0 0 220px` sets flex-basis on the
+   main axis, i.e. it pins every panel to a hard 220px HEIGHT and forbids it
+   from growing. Content taller than that (the day boxes, the event cards)
+   then overflows straight out the bottom of the white box. A plain
+   `height: auto` cannot fix this, because a non-auto flex-basis outranks the
+   height property for flex items. `flex: none` == `0 0 auto`, which hands
+   sizing back to the content. */
+.my-events-page .panel {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  background: #fff;
+  flex: none;
+}
+
+.agenda-panel {
+  margin-bottom: 0.2rem;
+}
+
+.agenda-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.agenda-header h3 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.agenda-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.agenda-nav button {
+  padding: 0.45rem 0.85rem;
+  line-height: 1;
+}
+
+.agenda-range {
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 160px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.agenda-today-btn {
+  margin-left: 0.3rem;
+}
+
+.agenda-subtitle {
+  margin: 0 0 1.2rem;
+}
+
+.agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.agenda-day {
+  border: 1px solid #d8d0b8;
+  border-radius: 18px;
+  padding: 0.6rem;
+  min-height: 280px;
+  background: var(--background-tint2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.agenda-day-today {
+  border-color: var(--primary-color);
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--primary-color) inset;
+}
+
+.agenda-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.agenda-day-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.agenda-day-date {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.agenda-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow-y: auto;
+}
+
+.agenda-event {
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--secondary-color);
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+}
+
+.agenda-event:hover {
+  background: var(--background-tint);
+}
+
+.agenda-event-time {
+  font-size: 0.68rem;
+  color: #666;
+}
+
+.agenda-event-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1.25;
+}
+
+.agenda-event-past {
+  opacity: 0.6;
+  border-left-color: #bbb;
+}
+
+.agenda-event-past .agenda-event-title {
+  color: #555;
+}
+
+.agenda-empty {
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: center;
+  margin-top: 0.6rem;
+}
+
+.registered-list-panel h3 {
+  text-align: left;
+  margin-bottom: 0.6rem;
+}
+
+.registered-list-panel .event-item {
+  margin-bottom: 0.8rem;
+}
+
+.registered-list-panel .event-item:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .agenda-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agenda-day {
+    min-height: auto;
+  }
+
+  .agenda-range {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 700px) {

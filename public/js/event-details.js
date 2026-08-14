@@ -1,97 +1,98 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Session Management
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (!currentUser) {
-    window.location.href = 'login.html';
-    return;
-  }
-
-  // S'assurer que les tableaux existent dans le profil de l'utilisateur
-  if (!currentUser.registeredEvents) currentUser.registeredEvents = [];
-  if (!currentUser.eventHistory) currentUser.eventHistory = {}; // Pour stocker 'attended' ou 'missed'
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Session Management (currentUser now carries the real database user_id)
+  const currentUser = await WebNovaAPI.requireLogin();
+  if (!currentUser) return;
 
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      localStorage.removeItem('currentUser');
-      window.location.href = 'login.html';
+      WebNovaAPI.logout();
     });
   }
-
-  // 2. Récupérer l'événement via l'URL
-  const params = new URLSearchParams(window.location.search);
-  const eventId = Number(params.get('id'));
-  const event = typeof fakeEvents !== 'undefined' ? fakeEvents.find((item) => item.event_id === eventId) : null;
 
   const titleElement = document.getElementById('event-title');
   const detailsElement = document.getElementById('event-details');
   const actionsElement = document.getElementById('dynamic-actions');
 
-  if (!event) {
+  // 2. Read the event id from the URL, e.g. event-details.html?id=3
+  const params = new URLSearchParams(window.location.search);
+  const eventId = Number(params.get('id'));
+
+  if (!Number.isInteger(eventId)) {
     titleElement.textContent = 'Event not found';
     detailsElement.innerHTML = '<p>Sorry, this event could not be found or has been removed.</p>';
     return;
   }
 
-  // 3. Injecter les informations de l'événement dans la grille
+  // The event itself, plus this student's registrations so we know whether
+  // they already signed up (and with which status).
+  let event;
+  let registrations;
+  try {
+    [event, registrations] = await Promise.all([
+      WebNovaAPI.getEvent(eventId),
+      WebNovaAPI.getMyRegistrations(),
+    ]);
+  } catch (err) {
+    console.error(err);
+    titleElement.textContent = 'Event not found';
+    detailsElement.innerHTML = `<p>${err.message}</p>`;
+    return;
+  }
+
+  // 3. Inject the event information into the details grid
   titleElement.textContent = event.title;
   detailsElement.innerHTML = `
     <div class="detail-item detail-full-width">
       <span class="detail-label">Description</span>
-      <p>${event.description}</p>
+      <p>${event.description || '—'}</p>
     </div>
     <div class="detail-item"><span class="detail-label">Category</span><p>${event.category}</p></div>
-    <div class="detail-item"><span class="detail-label">Location</span><p>${event.location}</p></div>
+    <div class="detail-item"><span class="detail-label">Location</span><p>${event.location || '—'}</p></div>
     <div class="detail-item"><span class="detail-label">Date</span><p>${event.event_date}</p></div>
     <div class="detail-item"><span class="detail-label">Time</span><p>${event.start_time} - ${event.end_time}</p></div>
     <div class="detail-item"><span class="detail-label">Capacity</span><p>${event.capacity} students</p></div>
-    <div class="detail-item"><span class="detail-label">Organizer</span><p>${event.organizer_id}</p></div>
+    <div class="detail-item"><span class="detail-label">Status</span><p>${event.status}</p></div>
   `;
 
-  // 4. LOGIQUE D'INSCRIPTION (State Machine)
+  // 4. REGISTRATION LOGIC (State Machine)
+  const today = WebNovaAPI.startOfToday();
+  const isPast = event.dateObj !== null && event.dateObj < today;
 
-  // Mettre la date d'aujourd'hui à minuit pour une comparaison juste
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const eventDate = new Date(event.event_date);
+  // This student's non-cancelled registration for this event, if there is one.
+  const registration = registrations.filter((r) => r.event_id === eventId).find((r) => WebNovaAPI.isActive(r));
+  const isRegistered = Boolean(registration);
 
-  // Variables d'état
-  const isPast = eventDate < today;
-  const isRegistered = currentUser.registeredEvents.includes(eventId);
-  const historyStatus = currentUser.eventHistory[eventId]; // Renvoie 'attended' ou 'missed'
-
-  // Fonction utilitaire pour sauvegarder et rafraîchir
-  const saveUserToDB = () => {
-    // Met à jour la session active
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-    // Met à jour la "Base de données" globale pour que ça persiste
-    const users = JSON.parse(localStorage.getItem('eventPlatformUsers')) || [];
-    const index = users.findIndex((u) => u.email === currentUser.email);
-    if (index !== -1) {
-      users[index] = currentUser;
-      localStorage.setItem('eventPlatformUsers', JSON.stringify(users));
+  // Small helper: run a server action, then reload so the page redraws with
+  // the new state. The button is disabled meanwhile to prevent double clicks.
+  const runAction = async (button, action, successMessage) => {
+    button.disabled = true;
+    try {
+      await action();
+      if (successMessage) alert(successMessage);
+      window.location.reload();
+    } catch (err) {
+      alert(err.message);
+      button.disabled = false;
     }
-
-    // Recharge la page pour afficher le nouveau statut
-    window.location.reload();
   };
 
-  // --- ARBRE DE DÉCISION DES BOUTONS ---
+  // --- BUTTON DECISION TREE ---
 
   if (event.status === 'cancelled') {
-    // Cas 1 : L'événement est annulé
+    // Case 1: the event was cancelled, so no action is possible
     actionsElement.innerHTML = `<p style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;">🚨 This event has been cancelled.</p>`;
   } else if (isPast) {
-    // Cas 2 : L'événement est dans le passé
+    // Case 2: the event already happened
     if (isRegistered) {
-      if (historyStatus === 'attended') {
+      if (registration.status === 'attended') {
         actionsElement.innerHTML = `<p style="color: #2e7d32; font-weight: bold;">✅ You attended this event. Hope you had fun!</p>`;
-      } else if (historyStatus === 'missed') {
+      } else if (registration.status === 'missed') {
         actionsElement.innerHTML = `<p style="color: #d32f2f; font-weight: bold;">❌ You missed this event.</p>`;
       } else {
-        // L'utilisateur était inscrit, mais n'a pas encore dit s'il est venu
+        // Registered, but the student has not said yet whether they showed up.
+        // Their answer is saved as the status on the Registrations row.
         actionsElement.innerHTML = `
           <div style="width: 100%;">
             <p style="margin-bottom: 0.8rem; font-weight: bold; color: var(--primary-color);">You were registered for this event. Did you attend?</p>
@@ -101,46 +102,48 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
         `;
-        document.getElementById('btn-attended').addEventListener('click', () => {
-          currentUser.eventHistory[eventId] = 'attended';
-          saveUserToDB();
-        });
-        document.getElementById('btn-missed').addEventListener('click', () => {
-          currentUser.eventHistory[eventId] = 'missed';
-          saveUserToDB();
-        });
+        const btnAttended = document.getElementById('btn-attended');
+        const btnMissed = document.getElementById('btn-missed');
+
+        btnAttended.addEventListener('click', () =>
+          runAction(btnAttended, () => WebNovaAPI.updateRegistration(registration.registration_id, 'attended'))
+        );
+        btnMissed.addEventListener('click', () =>
+          runAction(btnMissed, () => WebNovaAPI.updateRegistration(registration.registration_id, 'missed'))
+        );
       }
     } else {
       actionsElement.innerHTML = `<p style="color: #666; font-style: italic;">This event has already passed.</p>`;
     }
   } else {
-    // Cas 3 : L'événement est dans le futur
+    // Case 3: the event is still upcoming
     if (isRegistered) {
-      // Déjà inscrit -> Possibilité de Drop
+      // Already registered -> offer to drop (sets status 'cancelled' server-side)
       actionsElement.innerHTML = `
         <div style="display: flex; align-items: center; gap: 1.5rem;">
           <p style="color: #2e7d32; font-weight: bold; margin: 0;">✅ You are successfully registered!</p>
           <button id="btn-drop" class="btn btn-outline" style="color: #d32f2f; border-color: #d32f2f;">Drop Event</button>
         </div>
       `;
-      document.getElementById('btn-drop').addEventListener('click', () => {
-        if (confirm('Are you sure you want to drop this event?')) {
-          // Retire l'ID du tableau des inscriptions
-          currentUser.registeredEvents = currentUser.registeredEvents.filter((id) => id !== eventId);
-          saveUserToDB();
-        }
+      const btnDrop = document.getElementById('btn-drop');
+      btnDrop.addEventListener('click', () => {
+        if (!confirm('Are you sure you want to drop this event?')) return;
+        runAction(btnDrop, () => WebNovaAPI.updateRegistration(registration.registration_id, 'cancelled'));
       });
     } else if (event.status === 'open') {
-      // Pas inscrit, événement ouvert -> Bouton Register
+      // Not registered and the event is open -> show the Register button.
+      // The server re-checks capacity, duplicates and the date before accepting.
       actionsElement.innerHTML = `<button id="btn-register" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">Register Now</button>`;
-      document.getElementById('btn-register').addEventListener('click', () => {
-        // Ajoute l'ID au tableau des inscriptions
-        currentUser.registeredEvents.push(eventId);
-        saveUserToDB();
-        alert('Registration successful!');
-      });
+      const btnRegister = document.getElementById('btn-register');
+      btnRegister.addEventListener('click', () =>
+        runAction(
+          btnRegister,
+          () => WebNovaAPI.registerForEvent(eventId),
+          'Registration successful!'
+        )
+      );
     } else if (event.status === 'full') {
-      // Pas inscrit, événement plein -> Message
+      // Not registered and the event is full -> nothing to do but say so
       actionsElement.innerHTML = `<p style="color: #f57c00; font-weight: bold;">⚠️ This event is currently full.</p>`;
     }
   }

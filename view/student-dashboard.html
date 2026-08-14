@@ -6,7 +6,8 @@
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <link rel="stylesheet" href="../public/css/styles.css" />
     <link rel="stylesheet" href="../public/css/student.css" />
-    <script src="../public/js/events-data.js" defer></script>
+    <script src="../public/js/api.js" defer></script>
+    <script src="../public/js/nav-search.js" defer></script>
     <script src="../public/js/student-dashboard.js" defer></script>
     <title>Student Dashboard</title>
   </head>
@@ -14,12 +15,25 @@
     <header>
       <a href="index.html" class="logo-link">
         <img src="../public/images/logo.webp" alt="Logo" />
+
         <h1>WebNova</h1>
       </a>
-      <nav>
+      <nav class="top-nav">
+        <div class="nav-search">
+          <form id="nav-search-form" role="search" autocomplete="off">
+            <input
+              type="search"
+              id="nav-search-input"
+              placeholder="Search events"
+              aria-label="Search events"
+              aria-expanded="false"
+              aria-controls="nav-search-results"
+            />
+          </form>
+          <ul id="nav-search-results" class="nav-search-results" hidden></ul>
+        </div>
         <a href="student-event.html" class="btn btn-outline">Events</a>
         <a href="student-profile.html" class="btn btn-outline">Profile</a>
-        <a href="upcoming-events.html" class="btn btn-outline">Upcoming Events</a>
         <a href="my-events.html" class="btn btn-outline">My Events</a>
         <a href="index.html" class="btn btn-primary">Logout</a>
       </nav>
@@ -29,24 +43,46 @@
       <div class="dashboard-shell">
         <section class="hero-card">
           <div>
-            <h1>Welcome back, Souheil</h1>
-            <p>You have 3 upcoming events and 2 new recommendations this week.</p>
+            <h1>Student Dashboard</h1>
+            <p>Welcome back, Souheil Bouakkaz</p>
           </div>
         </section>
 
         <div class="dashboard-grid">
-          <section class="panel"></section>
+          <!--next Upcoming event single pannel -->
+          <section class="panel panel-small panel-upcoming-event"></section>
 
-          <section class="panel">
+          <!-- Favorite category pannel -->
+          <section class="panel panel-small panel-favorite-category">
+            <h2>Favorite Category</h2>
+          </section>
+
+          <!-- Recommended events pannel -->
+          <section class="panel panel-small panel-recommended">
             <h2>Recommended for you</h2>
             <div class="event-item">
               <strong>Study Skills Workshop</strong>
-              <span class="muted">Free session to improve time management.</span>
             </div>
+
             <div class="event-item">
-              <strong>Upcomming events</strong>
-              <span class="muted">Enjoy food, music, and student performances.</span>
+              <strong>Next Upcoming Events</strong>
             </div>
+          </section>
+
+          <!--Total events attended pannel*/-->
+
+          <section class="panel panel-small panel-total">
+            <h2>Total Events Attended</h2>
+            <h1 class="big-number">10</h1>
+          </section>
+
+          <!-- Upcomming events panel-->
+          <section class="panel panel-tall panel-upcoming-events">
+            <h2>Registered Events</h2>
+          </section>
+
+          <section class="panel panel-small progress-panel">
+            <h2>Participation Progress</h2>
           </section>
         </div>
       </div>

@@ -31,10 +31,10 @@ router.get('/me', async (req, res) => {
 
 // 1. REGISTER
 router.post('/register', async (req, res) => {
-  const { full_name, email, password } = req.body;
+  const { full_name, email, student_id, password } = req.body;
 
   // Is the request empty? Are all fields filled?
-  if (!full_name || !email || !password) {
+  if (!full_name || !email || !student_id || !password) {
     return res.status(400).json({ error: 'Please fill in all fields.' });
   }
 
@@ -42,6 +42,11 @@ router.post('/register', async (req, res) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'The email format is invalid.' });
+  }
+
+  const studentIdRegex = /^\d{8}$/;
+  if (!studentIdRegex.test(student_id)) {
+    return res.status(400).json({ error: 'The student ID must be 8 digits.' });
   }
 
   // Is the password long enough? (8 characters minimum)
@@ -54,6 +59,12 @@ router.post('/register', async (req, res) => {
     const [existingUsers] = await pool.execute('SELECT * FROM Users WHERE email = ?', [email]);
     if (existingUsers.length > 0) {
       return res.status(400).json({ error: 'This email is already in use.' });
+    }
+
+    // Check if the student ID is already in use
+    const [existingStudentId] = await pool.execute('SELECT * FROM Users WHERE student_id = ?', [student_id]);
+    if (existingStudentId.length > 0) {
+      return res.status(400).json({ error: 'This student ID is already in use.' });
     }
 
     // Hash the password before storing it in the database

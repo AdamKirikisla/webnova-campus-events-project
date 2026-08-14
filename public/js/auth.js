@@ -36,6 +36,7 @@ formSignup.addEventListener('submit', async (e) => {
   const firstName = document.getElementById('signup-firstname').value.trim();
   const lastName = document.getElementById('signup-lastname').value.trim();
   const email = document.getElementById('signup-email').value.trim();
+  const studentId = document.getElementById('signup-studentid').value.trim();
   const password = document.getElementById('signup-password').value;
 
   const fullName = `${firstName} ${lastName}`;
@@ -47,6 +48,7 @@ formSignup.addEventListener('submit', async (e) => {
       body: JSON.stringify({
         full_name: fullName,
         email: email,
+        student_id: studentId,
         password: password,
       }),
     });

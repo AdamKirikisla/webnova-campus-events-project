@@ -88,6 +88,19 @@
                 placeholder="********"
               />
             </div>
+            <div class="input-group">
+              <label for="signup-studentid">Student ID</label>
+              <input
+                type="text"
+                id="signup-studentid"
+                name="studentid"
+                required
+                pattern="\d{8}"
+                placeholder="40123456"
+                oninvalid="this.setCustomValidity('Please enter your 8-digit student ID.')"
+                oninput="this.setCustomValidity('')"
+              />
+            </div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>
         </div>

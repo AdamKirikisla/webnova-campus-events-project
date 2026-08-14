@@ -130,7 +130,7 @@ router.post('/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Error during logout' });
     }
-    res.json({ message: 'Logged out successfully', redirectUrl: '/login.html' });
+    res.json({ message: 'Logged out successfully', redirectUrl: '/index.html' });
   });
 });
 

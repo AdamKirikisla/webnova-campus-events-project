@@ -142,10 +142,10 @@ const WebNovaAPI = (() => {
   async function logout() {
     try {
       const data = await request('/auth/logout', { method: 'POST' });
-      window.location.href = (data && data.redirectUrl) || 'login.html';
+      window.location.href = (data && data.redirectUrl) || 'index.html';
     } catch (err) {
       // Even if the call fails, get the user off the page.
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     }
   }
 

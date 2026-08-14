@@ -5,68 +5,76 @@ if (dateInput) {
   const today = new Date().toISOString().split('T')[0];
   dateInput.min = today;
 }
-// Intercept form submission to handle data validation and dynamic object creation without reloading
-forms.addEventListener('submit', (e) => {
+
+// STEP 1: load real categories from the backend and fill in the dropdown
+async function loadCategories() {
+  const categorySelect = document.querySelector('select[name="category_id"]');
+  try {
+    const response = await fetch('/categories');
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    const categories = await response.json();
+
+    for (let category of categories) {
+      const option = document.createElement('option');
+      option.value = category.category_id;
+      option.textContent = category.category_name;
+      categorySelect.appendChild(option);
+    }
+  } catch (error) {
+    console.log('Something went wrong:', error);
+  }
+}
+
+loadCategories();
+
+// STEP 2: submit the form via POST /events instead of fakeEvents.push()
+forms.addEventListener('submit', async (e) => {
   e.preventDefault();
-  // Validate text fields to prevent empty or whitespace-only submissions
+
   const descriptionValue = forms.description.value.trim();
   if (descriptionValue === '') {
     alert('Description cannot be empty or contain only spaces.');
     return;
   }
-  // Chronological Validation: Ensure the event's end time strictly follows the start time
+
   if (forms.start_time.value >= forms.end_time.value) {
     alert('The end time must be AFTER the start time!');
     return;
   }
-  // Construct the new event object by mapping form input values to the dataset schema
-  const newEvent = {
-    event_id: fakeEvents.length + 1,
+
+  // forms can access elements due to 'name' element in HTML
+  const payload = {
     title: forms.title.value,
-    description: forms.description.value,
-    category: forms.category.value,
+    description: descriptionValue,
+    category_id: Number(forms.category_id.value),
     event_date: forms.event_date.value,
     start_time: forms.start_time.value,
     end_time: forms.end_time.value,
     location: forms.location.value,
-    capacity: forms.capacity.value,
-    status: forms.status.value,
+    capacity: Number(forms.capacity.value),
     organizer_id: forms.organizer_id.value,
-    created_on: new Date().toLocaleDateString(),
   };
-  // Append the newly created event object to the mock database array
-  fakeEvents.push(newEvent);
 
-  console.log(fakeEvents);
-  // Target the preview container and clear any existing elements to prepare for rendering
-  const page = document.querySelector('.displayCard');
-  page.replaceChildren();
+  try {
+    const response = await fetch('/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
 
-  const currentIndex = fakeEvents.length - 1;
-  const newEventData = fakeEvents[currentIndex];
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
 
-  const createdHeader = document.createElement('p');
-  const card = document.createElement('div');
-  card.classList.add('cardDisplay');
-  // Dynamically generate the HTML structure to display a live preview of the new event card
-  card.innerHTML = `
-    <h2>${newEventData.title}</h2>
-    <div class="card-content">
-      <div class="description"><p>Description</p><p>${newEventData.description}</p></div>
-      <div class="category"><p>Category</p><p>${newEventData.category}</p></div>
-      <div class="event_date"><p>Date</p><p>${newEventData.event_date}</p></div>
-      <div class="start_time"><p>Start Time</p><p>${newEventData.start_time}</p></div>
-      <div class="end_time"><p>End Time</p><p>${newEventData.end_time}</p></div>
-      <div class="location"><p>Location</p><p>${newEventData.location}</p></div>
-      <div class="capacity"><p>Capacity</p><p>${newEventData.capacity}</p></div>
-      <div class="organizer_id"><p>Organizer</p><p>${newEventData.organizer_id}</p></div>
-      <div class="status"><p>Status</p><p>${newEventData.status}</p></div>
-    </div>
-  `;
-  //Created Title
-  createdHeader.classList.add('createdHeader');
-  createdHeader.textContent = 'Created Event';
-  page.append(createdHeader);
+    const result = await response.json();
+    console.log(result);
 
-  page.append(card);
+    alert('Event created successfully!');
+    forms.reset();
+  } catch (error) {
+    console.log('Something went wrong:', error);
+    alert('Could not create event.');
+  }
 });

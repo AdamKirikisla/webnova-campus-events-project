@@ -128,3 +128,33 @@ INSERT INTO Registrations (user_id, event_id, status) VALUES
 (2, 1, 'registered'),
 (2, 2, 'registered'),
 (2, 3, 'cancelled');
+
+
+
+-- Demo events for presentation week (Thu Aug 13, Fri Aug 14, Sat Aug 15)
+INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status) VALUES
+('Thursday Demo Event', 'Event used for demo purposes.', 1, '2026-08-13', '10:00:00', '11:00:00', 'Demo Room', 30, 'open'),
+('Friday Demo Event', 'Event used for demo purposes.', 1, '2026-08-14', '10:00:00', '11:00:00', 'Demo Room', 30, 'open'),
+('Saturday Demo Event', 'Event used for demo purposes.', 1, '2026-08-15', '09:00:00', '10:00:00', 'Demo Room', 30, 'open');
+
+-- Registers the test student (user_id 2) to all three demo events above
+-- (event_id 4, 5, 6, since they're the 4th/5th/6th events inserted).
+INSERT INTO Registrations (user_id, event_id, status) VALUES
+(2, 4, 'registered'),
+(2, 5, 'registered'),
+(2, 6, 'registered');
+
+
+-- One event per category, covering all status/timing combinations:
+-- open/full/cancelled/completed/disabled x past/future
+INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status) VALUES
+('Excel Basics Workshop', 'Learn the fundamentals of Excel, including formulas, pivot tables, and data visualization. Bring your laptop!', 1, '2026-09-01', '13:00:00', '15:00:00', 'H-820', 40, 'open'),
+('Spring Career Expo', 'Connect with top tech companies and engineering firms looking for interns and new graduates this year.', 2, '2026-09-18', '10:00:00', '16:00:00', 'EV Building Atrium', 200, 'full'),
+('Anime Club Movie Night', 'Join us for a double feature of classic Studio Ghibli films. Popcorn and snacks will be provided!', 3, '2026-09-08', '19:00:00', '21:00:00', 'Hall Building 7th Floor Lounge', 30, 'cancelled'),
+('Summer Intramural Finals', 'The championship matches for the summer basketball league. Come cheer on your fellow Stingers!', 4, '2026-08-05', '17:00:00', '19:00:00', 'PERFORM Centre', 100, 'completed'),
+('Diwali Celebration', 'Celebrate the festival of lights with traditional music, dance performances, and authentic food.', 5, '2026-10-15', '18:00:00', '21:00:00', 'Loyola Quad', 150, 'disabled'),
+('Food Bank Volunteer Shift', 'Help sort and distribute food donations for the student emergency food fund.', 6, '2026-08-01', '10:00:00', '13:00:00', 'Norris Building Plaza', 20, 'open'),
+('Rooftop Summer Social', 'End the summer semester with music, drinks, and a great view of downtown Montreal.', 7, '2026-08-08', '18:00:00', '22:00:00', 'Hall Building Rooftop', 60, 'full'),
+('Guest Talk: Startups 101', 'Local entrepreneurs share their journey from university project to successful startup.', 8, '2026-08-06', '14:00:00', '15:30:00', 'H-110', 80, 'cancelled'),
+('Alumni Networking Breakfast', 'Morning coffee and networking with successful John Molson School of Business alumni.', 9, '2026-09-22', '08:00:00', '10:00:00', 'JMSB Atrium', 90, 'open'),
+('Old Art Exhibit', 'End-of-year showcase featuring multimedia projects from Fine Arts students.', 10, '2026-07-20', '11:00:00', '17:00:00', 'VA Building Gallery', 50, 'disabled');

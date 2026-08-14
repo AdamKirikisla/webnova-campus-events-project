@@ -95,6 +95,10 @@ async function deleteEvent(req, res) {
     const id = Number(req.params.id);
     if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid event id.' });
 
+    // Registrations reference this event_id via a foreign key, so they
+    // have to go first or MySQL will refuse to delete the event.
+    await pool.execute('DELETE FROM Registrations WHERE event_id = ?', [id]);
+
     const [result] = await pool.execute('DELETE FROM Events WHERE event_id = ?', [id]);
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Event not found.' });
 

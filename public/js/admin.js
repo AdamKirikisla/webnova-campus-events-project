@@ -18,8 +18,6 @@ async function loadCategories() {
   }
 }
 
-loadCategories();
-
 const page = document.querySelector('.page');
 
 // STEP 1: fetch real events from the backend instead of looping over fakeEvents
@@ -52,7 +50,7 @@ async function loadEvents() {
           <div class="row end_time"><p>End Time</p><p>${event.end_time}</p></div>
           <div class="row location"><p>Location</p><p>${event.location}</p></div>
           <div class="row capacity"><p>Capacity</p><p>${event.capacity}</p></div>
-          <div class="row organizer_id"><p>Organizer</p><p>${event.organizer_id}</p></div>
+          <div class="row organizer_id"><p>Organizer</p><p>${event.organizer_name}</p></div>
           <div class="row status"><p>Status</p><p>${event.status}</p></div>
           <div class="row created_on"><p>Created On</p><p>${event.created_on}</p></div>
         </div>
@@ -70,7 +68,20 @@ async function loadEvents() {
   }
 }
 
-loadEvents();
+(async () => {
+  const currentUser = await WebNovaAPI.requireLogin();
+  if (!currentUser) return;
+  loadCategories();
+  loadEvents();
+})();
+
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    WebNovaAPI.logout();
+  });
+}
 
 // STEP 2: Delete button now calls DELETE /events/:id
 page.addEventListener('click', async (e) => {

@@ -132,10 +132,10 @@ INSERT INTO Registrations (user_id, event_id, status) VALUES
 
 
 -- Demo events for presentation week (Thu Aug 13, Fri Aug 14, Sat Aug 15)
-INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status) VALUES
-('Thursday Demo Event', 'Event used for demo purposes.', 1, '2026-08-13', '10:00:00', '11:00:00', 'Demo Room', 30, 'open'),
-('Friday Demo Event', 'Event used for demo purposes.', 1, '2026-08-14', '10:00:00', '11:00:00', 'Demo Room', 30, 'open'),
-('Saturday Demo Event', 'Event used for demo purposes.', 1, '2026-08-15', '09:00:00', '10:00:00', 'Demo Room', 30, 'open');
+INSERT INTO Events (title, description, category_id, event_date, start_time, end_time, location, capacity, status, organizer_id) VALUES
+('Thursday Demo Event', 'Event used for demo purposes.', 1, '2026-08-13', '10:00:00', '11:00:00', 'Demo Room', 30, 'open', 1),
+('Friday Demo Event', 'Event used for demo purposes.', 1, '2026-08-14', '10:00:00', '11:00:00', 'Demo Room', 30, 'open', 1),
+('Saturday Demo Event', 'Event used for demo purposes.', 1, '2026-08-15', '09:00:00', '10:00:00', 'Demo Room', 30, 'open', 1);
 
 -- Registers the test student (user_id 2) to all three demo events above
 -- (event_id 4, 5, 6, since they're the 4th/5th/6th events inserted).

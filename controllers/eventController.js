@@ -3,9 +3,10 @@ const pool = require('../db');
 async function getAllEvents(req, res) {
   try {
     const [rows] = await pool.execute(`
-      SELECT e.*, c.category_name
+      SELECT e.*, c.category_name, u.full_name AS organizer_name
       FROM Events e
       LEFT JOIN Categories c ON e.category_id = c.category_id
+      LEFT JOIN Users u ON e.organizer_id = u.user_id
     `);
     res.json(rows);
   } catch (err) {
@@ -21,9 +22,10 @@ async function getEventById(req, res) {
 
     const [rows] = await pool.execute(
       `
-      SELECT e.*, c.category_name
+      SELECT e.*, c.category_name, u.full_name AS organizer_name
       FROM Events e
       LEFT JOIN Categories c ON e.category_id = c.category_id
+      LEFT JOIN Users u ON e.organizer_id = u.user_id
       WHERE e.event_id = ?
     `,
       [id]
@@ -39,8 +41,8 @@ async function getEventById(req, res) {
 
 async function createEvent(req, res) {
   try {
-    const { title, description, category_id, event_date, start_time, end_time, location, capacity, organizer_id } =
-      req.body;
+    const { title, description, category_id, event_date, start_time, end_time, location, capacity } = req.body;
+    const organizer_id = req.session.userId;
 
     if (!title || title.trim() === '') {
       return res.status(400).json({ error: 'Event title cannot be empty.' });

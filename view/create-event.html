@@ -19,7 +19,7 @@
         <a href="manage-events.html" class="btn btn-outline">Manage Events</a>
         <!-- <a href="create-event.html" class="btn btn-outline">Create Events</a> -->
         <a href="view-registrations.html" class="btn btn-outline">View Registrations</a>
-        <a href="index.html" class="btn btn-primary">Logout</a>
+        <a href="#" id="logout-btn" class="btn btn-primary">Logout</a>
       </nav>
     </header>
     <main>
@@ -87,17 +87,6 @@
               <option value="disabled">Disabled</option>
             </select>
           </label>
-          <label>
-            Organizer ID
-            <input
-              class="input"
-              type="text"
-              name="organizer_id"
-              pattern="[^\s].*"
-              placeholder="e.g. Career Services"
-              required
-            />
-          </label>
 
           <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -108,7 +97,7 @@
     <footer>
       <p>© 2026 WebNova. All rights reserved.</p>
     </footer>
-
+    <script src="../public/js/api.js" defer></script>
     <script src="../public/js/create-event.js"></script>
   </body>
 </html>

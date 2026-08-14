@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../public/css/about.css" />
     <link rel="icon" href="../public/images/logo.webp" type="image/webp" />
     <title>WebNova - About & Contact</title>
+    <script src="../public/js/about.js" defer></script>
   </head>
   <body>
     <header>
@@ -34,7 +35,7 @@
         <h2>Get in Touch</h2>
         <p>Have a question or need support? Send us a message!</p>
         <!-- Standard form structure for user inquiries -->
-        <form class="contact-form" action="#" method="POST">
+        <form id="form-contact" class="contact-form">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required placeholder="John Doe" />

@@ -1,9 +1,22 @@
+(async () => {
+  const currentUser = await WebNovaAPI.requireLogin();
+  if (!currentUser) return;
+})();
+
 const forms = document.querySelector('.forms');
 // Restrict the date input minimum value to today to prevent scheduling events in the past
 const dateInput = document.querySelector('input[name="event_date"]');
 if (dateInput) {
   const today = new Date().toISOString().split('T')[0];
   dateInput.min = today;
+}
+
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    WebNovaAPI.logout();
+  });
 }
 
 // STEP 1: load real categories from the backend and fill in the dropdown
@@ -54,7 +67,6 @@ forms.addEventListener('submit', async (e) => {
     end_time: forms.end_time.value,
     location: forms.location.value,
     capacity: Number(forms.capacity.value),
-    organizer_id: forms.organizer_id.value,
   };
 
   try {

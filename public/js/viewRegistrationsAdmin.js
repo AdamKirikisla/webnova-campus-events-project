@@ -193,4 +193,16 @@ async function init() {
   renderRows();
 }
 
-init();
+(async () => {
+  const currentUser = await WebNovaAPI.requireLogin();
+  if (!currentUser) return;
+  init();
+})();
+
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    WebNovaAPI.logout();
+  });
+}

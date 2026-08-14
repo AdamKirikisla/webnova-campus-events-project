@@ -37,6 +37,9 @@ app.use('/categories', categoryRoutes);
 const userRoutes = require('./routes/userRoutes');
 app.use('/users', userRoutes);
 
+const contactRoutes = require('./routes/contactRoutes');
+app.use('/contact', contactRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

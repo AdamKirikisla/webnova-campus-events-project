@@ -112,6 +112,11 @@ async function createRegistration(req, res) {
       'registered',
     ]);
 
+    const newCount = currentCount + 1;
+    if (newCount >= event.capacity && event.status === 'open') {
+      await pool.execute('UPDATE Events SET status = ? WHERE event_id = ?', ['full', event_id]);
+    }
+
     res.status(201).json({ message: 'Registered successfully.', registration_id: result.insertId });
   } catch (err) {
     console.error(err);

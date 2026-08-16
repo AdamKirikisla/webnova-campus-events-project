@@ -92,9 +92,8 @@ CREATE TABLE Registrations (
 -- student_id is nullable because the signup form does not ask for one:
 -- a student sets it later from their profile page.
 INSERT INTO Users (full_name, email, password_hash, student_id, role) VALUES
-('Test Admin', 'admin@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', NULL, 'admin'),
-('Test Student', 'student@test.com', '$2b$10$kMM4wL24YcJd1wVTARH8rep8zCB4pii0ZDchH45HKTSp/XPWhJWYa', '40000000', 'student');
-
+('Test Admin', 'admin@test.com', '$2b$10$FbsxjRCxuN0792oxElKH9OSPSpmR6QggmwAhgFyPs9ue7V3UJYYKe', NULL, 'admin'),
+('Test Student', 'student@test.com', '$2b$10$ahRFIO3ktEHIT1/BArDK4e.PBGeUL.gS.NX3Lk47Fm8cfWEHSvehW', '40000000', 'student');
 
 -- Categories inserted first so Events can reference their IDs below.
 -- Insertion order fixes the IDs: 1=Academic Workshops, 2=Career Events,

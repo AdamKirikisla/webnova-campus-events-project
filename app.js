@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: false })); // lets Express read form data
 const session = require('express-session');
 app.use(
   session({
-    secret: 'super_cle_secrete_webnova', // Dans un vrai projet, ça va dans le .env
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -36,9 +36,6 @@ app.use('/categories', categoryRoutes);
 // Users (profile read / update)
 const userRoutes = require('./routes/userRoutes');
 app.use('/users', userRoutes);
-
-const contactRoutes = require('./routes/contactRoutes');
-app.use('/contact', contactRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
